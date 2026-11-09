@@ -54,7 +54,7 @@ Workflow **"R&E Installaties — Advies verduurzaming"** (`0m3vgiOj1lCl3VBI`):
 
 1. Webhook `POST /webhook/re-advies-verduurzaming` (CORS: re-installaties.nl + webflow.io)
 2. **Verwerk aanvraag**: honeypot, verplichte velden, berekening, lead-ID, sheetregel en beide mails
-3. Bij foto's: een map per aanvraag in Drive (*R&E Installaties – Advies verduurzaming › Foto's per aanvraag*), daarna een upload per foto
+3. Foto's worden niet opgeslagen: ze gaan als bijlage mee in de leadmail (de widget verkleint ze tot max 1600 px, max 12 MB in totaal)
 4. **Google Sheet** *R&E – Aanvragen advies verduurzaming*, met een kolom *Status* voor de opvolging
 5. Antwoord naar het formulier, met de berekening voor het bedankscherm
 6. Rapportmail naar de klant, daarna de leadmail naar `info@re-installaties.nl`. Beide gaan via SMTP vanaf `noreply@re-installaties.nl`.

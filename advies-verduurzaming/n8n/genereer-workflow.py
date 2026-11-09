@@ -36,43 +36,9 @@ const weiger = node({{
   type: 'n8n-nodes-base.respondToWebhook', version: 1.5,
   config: {{ name: 'Weiger aanvraag', parameters: {{ respondWith: 'json', responseBody: expr('{{{{ JSON.stringify({{ ok: false, reden: $json.reden }}) }}}}'), options: {{ responseCode: 400 }} }} }}
 }});
-const heeftFotos = ifElse({{
-  version: 2.2,
-  config: {{ name: "Foto's meegestuurd?", parameters: {{ conditions: {{
-    options: {{ caseSensitive: true, leftValue: '', typeValidation: 'loose' }},
-    conditions: [{{ leftValue: expr('{{{{ $json.fotoAantal }}}}'), rightValue: 0, operator: {{ type: 'number', operation: 'gt' }} }}],
-    combinator: 'and' }} }} }}
-}});
-const fotomap = node({{
-  type: 'n8n-nodes-base.googleDrive', version: 3,
-  config: {{ name: 'Fotomap aanmaken', onError: 'continueRegularOutput', parameters: {{ resource: 'folder', operation: 'create', name: expr('{{{{ $json.mapNaam }}}}'),
-    driveId: {{ __rl: true, mode: 'list', value: 'My Drive', cachedResultName: 'My Drive' }},
-    folderId: {{ __rl: true, mode: 'id', value: '{FOTO_MAP}', cachedResultName: "Foto's per aanvraag" }}, options: {{}} }},
-    credentials: {{ googleDriveOAuth2Api: {{ id: 'YaaNZpEM4kEh7lA3', name: 'Google Drive account' }} }} }},
-  output: [{{ id: '1abcFolder', name: 'map' }}]
-}});
-const splits = node({{
-  type: 'n8n-nodes-base.code', version: 2,
-  config: {{ name: "Foto's klaarzetten", parameters: {{ mode: 'runOnceForAllItems', jsCode: {J("""const bron = $('Verwerk aanvraag').first();
-const map = $input.first().json.id;
-if (!map) return [];
-return (bron.json.fotoKeys || []).filter((k) => bron.binary && bron.binary[k]).map((k) => ({
-  json: { bestandsnaam: bron.json.leadId + '_' + k + '.jpg', folderId: map },
-  binary: { data: bron.binary[k] }
-}));""")} }} }},
-  output: [{{ bestandsnaam: 'RE-1_foto_ketel_1.jpg', folderId: '1abcFolder' }}]
-}});
-const upload = node({{
-  type: 'n8n-nodes-base.googleDrive', version: 3,
-  config: {{ name: 'Foto uploaden', onError: 'continueRegularOutput', parameters: {{ resource: 'file', operation: 'upload', inputDataFieldName: 'data', name: expr('{{{{ $json.bestandsnaam }}}}'),
-    driveId: {{ __rl: true, mode: 'list', value: 'My Drive', cachedResultName: 'My Drive' }},
-    folderId: {{ __rl: true, mode: 'id', value: expr('{{{{ $json.folderId }}}}') }}, options: {{}} }},
-    credentials: {{ googleDriveOAuth2Api: {{ id: 'YaaNZpEM4kEh7lA3', name: 'Google Drive account' }} }} }},
-  output: [{{ id: 'file1', name: 'RE-1_foto_ketel_1.jpg' }}]
-}});
 const regel = node({{
   type: 'n8n-nodes-base.set', version: 3.4,
-  config: {{ name: 'Sheetregel samenstellen', parameters: {{ mode: 'raw', jsonOutput: expr({J("{{ JSON.stringify(Object.assign({}, " + V + ".row, { 'Fotomap': " + fotomap + " })) }}")}), options: {{}} }} }},
+  config: {{ name: 'Sheetregel samenstellen', parameters: {{ mode: 'raw', jsonOutput: expr({J("{{ JSON.stringify(" + V + ".row) }}")})), options: {{}} }} }},
   output: [{{ 'Lead-ID': 'RE-261109-AB12' }}]
 }});
 const sheet = node({{
@@ -106,7 +72,7 @@ const internmail = node({{
   type: 'n8n-nodes-base.emailSend', version: 2.1,
   config: {{ name: 'Lead naar R&E', parameters: {{ fromEmail: 'R&E Aanvragen <noreply@re-installaties.nl>',
     toEmail: expr('{{{{ $json.to }}}}'), subject: expr('{{{{ $json.subject }}}}'), html: expr('{{{{ $json.html }}}}'),
-    options: {{ appendAttribution: false, replyTo: expr('{{{{ $json.replyTo }}}}') }} }}, credentials: {SMTP} }},
+    options: {{ appendAttribution: false, replyTo: expr('{{{{ $json.replyTo }}}}'), attachments: expr('{{{{ $json.bijlagen }}}}') }} }}, credentials: {SMTP} }},
   output: [{{ accepted: ['info@re-installaties.nl'] }}]
 }});
 const uitleg = sticky({J('''## Advies verduurzaming – R&E Installaties
@@ -114,7 +80,7 @@ const uitleg = sticky({J('''## Advies verduurzaming – R&E Installaties
 Ontvangt aanvragen van de widget op re-installaties.nl (code: github.com/flitsdigital/re-installaties/tree/main/advies-verduurzaming).
 
 1. **Verwerk aanvraag** controleert de invoer (honeypot + verplichte velden), rekent het advies uit en bouwt de sheetregel en beide mails. Rekenaannames staan bovenin deze node (REA_CFG) en komen uit `src/calc.js`.
-2. Foto's gaan naar een eigen map per aanvraag in Drive › *R&E Installaties – Advies verduurzaming › Foto's per aanvraag*.
+2. Foto's gaan als bijlage mee in de leadmail naar R&E (geen opslag in Drive).
 3. De aanvraag wordt opgeslagen in de Sheet, daarna krijgt het formulier antwoord (met de berekening voor het bedankscherm).
 4. Daarna: adviesrapport naar de klant en leadmail naar info@re-installaties.nl.
 
@@ -124,16 +90,10 @@ export default workflow('re-advies', 'R&E Installaties — Advies verduurzaming'
   .add(ontvang)
   .to(verwerk)
   .to(geldig
-    .onTrue(heeftFotos
-      .onTrue(fotomap.to(regel).to(sheet).to(bevestig).to(klantmail).to(leadmail).to(internmail))
-      .onFalse(regel))
+    .onTrue(regel.to(sheet).to(bevestig).to(klantmail).to(leadmail).to(internmail))
     .onFalse(weiger))
-  .add(fotomap)
-  .to(splits)
-  .to(upload)
   .add(uitleg)
   .group('Ontvangen & controleren', [verwerk, geldig], {{ description: 'Leest de formulierdata, weert bots en ontbrekende velden en rekent het advies uit.' }})
-  .group("Foto's uploaden", [splits, upload], {{ description: "Zet elke meegestuurde foto als los bestand in de fotomap van deze aanvraag." }})
   .group('Opslaan & antwoorden', [regel, sheet, bevestig], {{ description: 'Schrijft de aanvraag naar de Google Sheet en stuurt de berekening terug naar het formulier.' }})
   .group('Mails', [klantmail, leadmail, internmail], {{ description: 'Adviesrapport naar de klant, daarna de lead naar info@re-installaties.nl.' }});
 '''
