@@ -33,12 +33,15 @@
   color: var(--re-ink);
   line-height: var(--_typography---paragraph-body--line-height, 1.6);
   -webkit-font-smoothing: antialiased;
+  container: rea / inline-size;
+  display: block; width: 100%; max-width: 100%;
 }
 #re-adviesformulier * { box-sizing: border-box; }
 #re-adviesformulier h2, #re-adviesformulier h3, #re-adviesformulier h4 { font-family: var(--re-font); }
-#re-adviesformulier .re-layout { display: grid; grid-template-columns: minmax(0,1fr) 340px; gap: 26px; align-items: start; padding-bottom: 20px; }
+#re-adviesformulier .re-layout { display: grid; grid-template-columns: minmax(0,1fr) 320px; gap: 24px; align-items: start; padding-bottom: 20px; }
 
 /* ---------- Kaart / stap ---------- */
+#re-adviesformulier .re-block, #re-adviesformulier .re-summary { min-width: 0; }
 #re-adviesformulier .re-block { background: var(--re-card); border: 1px solid var(--re-line); border-radius: var(--re-radius); padding: 26px; box-shadow: var(--re-shadow); }
 #re-adviesformulier .re-progress { display: flex; gap: 5px; margin: -4px 0 20px; }
 #re-adviesformulier .re-progress i { flex: 1; height: 5px; border-radius: 9px; background: var(--re-line-soft); transition: background .3s var(--re-ease); }
@@ -63,9 +66,10 @@
 #re-adviesformulier .re-gap { height: 10px; }
 
 /* Keuzetegels – zelfde gedrag als .re-inst in het onderhoudsformulier */
-#re-adviesformulier .re-opts { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
+#re-adviesformulier .re-opts { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); gap: 12px; }
 #re-adviesformulier .re-opts.re-big { grid-template-columns: repeat(2, 1fr); }
-#re-adviesformulier .re-opt { position: relative; border: 1.5px solid var(--re-line); border-radius: var(--re-radius-sm); padding: 14px 40px 14px 14px; cursor: pointer; transition: .18s ease; background: #fff; display: flex; gap: 12px; align-items: center; min-height: 56px; font-weight: 600; font-size: .95rem; color: var(--re-ink); line-height: 1.25; hyphens: auto; overflow-wrap: break-word; }
+#re-adviesformulier .re-opt { position: relative; border: 1.5px solid var(--re-line); border-radius: var(--re-radius-sm); padding: 14px 40px 14px 14px; cursor: pointer; transition: .18s ease; background: #fff; display: flex; gap: 12px; align-items: center; min-height: 56px; font-weight: 600; font-size: .95rem; color: var(--re-ink); line-height: 1.25; hyphens: auto; -webkit-hyphens: auto; overflow-wrap: anywhere; min-width: 0; }
+#re-adviesformulier .re-opt > span:not(.re-ico):not(.re-check) { flex: 1 1 auto; min-width: 0; }
 #re-adviesformulier .re-opt:hover { border-color: var(--re-blue); transform: translateY(-1px); }
 #re-adviesformulier .re-opt input { position: absolute; opacity: 0; pointer-events: none; }
 #re-adviesformulier .re-opt.re-active { border-color: var(--re-blue); background: var(--re-blue-soft); box-shadow: 0 0 0 3px rgba(1,142,209,.14); }
@@ -193,19 +197,30 @@
 #re-adviesformulier .re-tips li::before { content: ""; position: absolute; left: 0; top: 7px; width: 11px; height: 11px; border-radius: 3px; background: var(--re-green-soft); border: 2px solid var(--re-green); }
 #re-adviesformulier .re-small { font-size: .78rem; color: var(--re-muted); margin-top: 14px; }
 
-@media (max-width: 920px) {
-  #re-adviesformulier .re-layout { grid-template-columns: 1fr; }
+@container rea (max-width: 980px) {
+  #re-adviesformulier .re-layout { grid-template-columns: minmax(0,1fr); }
   #re-adviesformulier .re-summary { position: static; }
   #re-adviesformulier .re-sum-steps { display: none; }
+  #re-adviesformulier .re-sum-card { padding: 18px 22px; }
+  #re-adviesformulier .re-sum-card .re-lead { margin-bottom: 6px; }
   #re-adviesformulier .re-sum-total { margin-top: 4px; }
-  #re-adviesformulier .re-block { padding: 20px; }
 }
-@media (max-width: 600px) {
+@container rea (max-width: 720px) {
+  #re-adviesformulier .re-block { padding: 20px; }
+  #re-adviesformulier .re-uploads { grid-template-columns: 1fr; }
+  #re-adviesformulier .re-uploads .re-up { min-height: 96px; }
+  #re-adviesformulier .re-step-sub { margin-left: 0; }
+}
+@container rea (max-width: 560px) {
+  #re-adviesformulier .re-block { padding: 18px 16px; }
   #re-adviesformulier .re-opts { grid-template-columns: 1fr 1fr; }
-  #re-adviesformulier .re-opts.re-big, #re-adviesformulier .re-grid-pers, #re-adviesformulier .re-uploads { grid-template-columns: 1fr; }
+  #re-adviesformulier .re-opts.re-big, #re-adviesformulier .re-grid-pers, #re-adviesformulier .re-grid-adres { grid-template-columns: 1fr; }
   #re-adviesformulier .re-opt { padding: 12px 34px 12px 12px; font-size: .9rem; }
   #re-adviesformulier .re-opt .re-ico { width: 36px; height: 36px; }
-  #re-adviesformulier .re-step-sub { margin-left: 0; }
   #re-adviesformulier .re-step-count { display: none; }
-  #re-adviesformulier .re-uploads .re-up { min-height: 96px; }
+  #re-adviesformulier .re-step-head h2 { font-size: 1.2rem; }
+  #re-adviesformulier .re-actions .re-btn { padding-left: 1.1em; padding-right: 1.1em; }
+}
+@container rea (max-width: 380px) {
+  #re-adviesformulier .re-opts { grid-template-columns: 1fr; }
 }

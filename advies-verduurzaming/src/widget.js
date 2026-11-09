@@ -136,6 +136,7 @@
     var root = document.getElementById(ROOT_ID);
     if (!root || root.getAttribute('data-rea-init')) return;
     root.setAttribute('data-rea-init', '1');
+    if (!root.getAttribute('lang')) root.setAttribute('lang', 'nl');
 
     var CONF = {
       webhook: root.getAttribute('data-webhook') || '',

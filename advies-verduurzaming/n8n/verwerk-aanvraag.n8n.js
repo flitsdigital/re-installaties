@@ -5,7 +5,7 @@
    n8n is leidend: de cijfers in de rapportmail en op het bedankscherm komen uit n8n. */
 
 var REA_CFG = {
-  versie: '1.0.0',
+  versie: '1.0.1',
   // Standaardtarieven als de klant niets invult (incl. belastingen)
   tariefGas: 1.35,          // € per m³
   tariefStroom: 0.28,       // € per kWh
