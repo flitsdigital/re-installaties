@@ -443,31 +443,11 @@
 
     // ------------------------------------------------------------ resultaat
     function showResult(r, ant, leadId) {
-      var row = function (k, v) { return '<dt>' + k + '</dt><dd>' + v + '</dd>'; };
-      var tvt = function (o) { return o.terugverdientijd ? '± ' + dec(o.terugverdientijd) + ' jaar' : '–'; };
-      var grid = '';
-      if (r.advies !== 'airco' && r.heeftIndicatie) {
-        var cards = ['<div class="re-calc"><h3>Uw situatie nu</h3><p class="re-hl re-navy">' + (r.kostNu ? euro(r.kostNu) + ' / jaar' : '± ' + r.kw + ' kW') + '</p><dl>' +
-          row('Warmtevraag', fmt(r.warmte) + ' kWh') + (r.bijWarmte ? row('Bijverwarming', fmt(r.bijWarmte) + ' kWh') : '') +
-          row('Vermogen nodig', '± ' + r.kw + ' kW') + row('Verwachte SCOP', dec(r.scop)) + '</dl></div>'];
-        var card = function (key, titel, o, extra) {
-          var rec = r.advies === key;
-          return '<div class="re-calc' + (rec ? ' re-rec' : '') + '">' + (rec ? '<span class="re-tag">' + (r.adviesBron === 'advies' ? 'Ons advies' : 'Uw keuze') + '</span>' : '') +
-            '<h3>' + titel + '</h3><p class="re-hl">' + (o.besparing > 0 ? euro(o.besparing) + ' / jaar' : 'Geen besparing') + '</p><dl>' + extra +
-            row('Extra stroomverbruik', fmt(o.stroom) + ' kWh') + row('Energiekosten na', euro(o.kosten)) + row('Terugverdientijd*', tvt(o)) + '</dl></div>';
-        };
-        var beide = r.adviesBron === 'advies';
-        if (r.hybride && (beide || r.advies === 'hybride')) cards.push(card('hybride', 'Hybride warmtepomp', r.hybride, row('Resterend gas', fmt(r.hybride.gasRest) + ' m³')));
-        if (r.allElectric && (beide || r.advies === 'all-electric')) cards.push(card('all-electric', 'All-electric warmtepomp', r.allElectric, row('Vastrecht gas', 'vervalt')));
-        grid = '<div class="re-calc-grid">' + cards.join('') + '</div>';
-        if (r.hybride) grid += '<p class="re-small">* Indicatieve berekening met €' + dec(r.tarieven.gas.toFixed(2)) + '/m³ gas, €' + dec(r.tarieven.stroom.toFixed(2)) + '/kWh stroom en een aangenomen netto investering van ' + euro(r.investering.hybride) + ' (hybride) of ' + euro(r.investering.allElectric) + ' (all-electric). Uw persoonlijke advies volgt na beoordeling door onze adviseur.</p>';
-      }
       $('progress').innerHTML = STEPS.map(function () { return '<i class="re-done"></i>'; }).join('');
       $('form').outerHTML = '<div class="re-result">' +
         '<div class="re-success-ico">' + I.ok + '</div>' +
         '<h2>Bedankt' + (ant.voornaam ? ', ' + esc(ant.voornaam) : '') + '! Uw adviesaanvraag is ontvangen.</h2>' +
-        '<p>Uw persoonlijke adviesrapport is onderweg naar <strong>' + esc(ant.email) + '</strong>. Een adviseur van R&amp;E Installaties neemt binnen 2 werkdagen contact met u op.' + (leadId ? ' Uw referentie: <strong>' + esc(leadId) + '</strong>.' : '') + '</p>' +
-        grid + (r.tips.length ? '<ul class="re-tips">' + r.tips.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' : '') + '</div>';
+        '<p>Uw persoonlijke adviesrapport is onderweg naar <strong>' + esc(ant.email) + '</strong>. Een adviseur van R&amp;E Installaties neemt binnen 2 werkdagen contact met u op.' + (leadId ? ' Uw referentie: <strong>' + esc(leadId) + '</strong>.' : '') + '</p></div>';
       $('steps').innerHTML = STEPS.map(function (s, i) { return '<li class="re-done"><span class="re-dotnum">✓</span>' + esc(s.kort) + '</li>'; }).join('');
       scrollTop();
     }
