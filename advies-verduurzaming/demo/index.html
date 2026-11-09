@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demo – Advies verduurzaming widget</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* Nabootsing van de Webflow-pagina; in Webflow komen tokens en layout uit de site zelf. */
+  body { margin: 0; background: #f7f6f1; font-family: Outfit, Arial, sans-serif; }
+  .demo-hero { background: #030d1b; color: #fff; padding: 56px 24px 72px; }
+  .demo-hero div, .demo-wrap { max-width: 1200px; margin: 0 auto; }
+  .demo-hero small { opacity: .7; }
+  .demo-hero h1 { font-weight: 600; font-size: clamp(2rem, 4vw, 3rem); margin: 10px 0; letter-spacing: -.02em; line-height: 1.1; max-width: 18ch; }
+  .demo-hero p { color: #c9d6e3; max-width: 60ch; margin: 0; font-size: 1.05rem; }
+  .demo-wrap { padding: 0 24px 60px; margin-top: -40px; }
+</style>
+</head>
+<body>
+  <section class="demo-hero"><div>
+    <small>Home › Diensten › Advies verduurzaming</small>
+    <h1>Vraag uw persoonlijk verduurzamingsadvies aan</h1>
+    <p>Beantwoord een paar vragen over uw woning. Met deze gegevens maken we voor u een advies op maat. Duurt ongeveer 4 minuten.</p>
+  </div></section>
+  <div class="demo-wrap">
+    <!-- ===== Dit blok gaat 1-op-1 in de Webflow Code Embed ===== -->
+    <div id="re-adviesformulier"
+         data-webhook="https://flitsdigital01.app.n8n.cloud/webhook/re-advies-verduurzaming"
+         data-privacy-url="#"
+         data-test="true"></div>
+    <script src="../dist/re-advies.js" defer></script>
+    <!-- ========================================================== -->
+  </div>
+</body>
+</html>

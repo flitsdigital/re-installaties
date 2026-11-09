@@ -1,0 +1,211 @@
+/* ==========================================================================
+   R&E Installaties – Advies verduurzaming · widget-CSS
+   Zelfde opzet als het onderhoudscontract-formulier (#re-onderhoudsformulier):
+   alle kleuren, radii en fonts haken aan op de Webflow design-tokens uit
+   r-e-installaties.webflow.css. Fallbacks na de komma zijn de huidige
+   tokenwaarden, zodat de widget ook buiten Webflow (demo) klopt.
+   ========================================================================== */
+#re-adviesformulier {
+  --re-blue: var(--_color---blue--700, #018ed1);
+  --re-blue-dark: var(--_color---blue--800, #1454a4);
+  --re-blue-soft: var(--_color---blue--100, #e8f3f7);
+  --re-blue-300: var(--_color---blue--300, #4eacdd);
+  --re-navy: var(--_color---blue--900, #030d1b);
+  --re-orange: linear-gradient(90deg, var(--_color---orange--800, #f58236), var(--_color---orange--600, #fa9d47));
+  --re-orange-solid: var(--_color---orange--800, #f58236);
+  --re-orange-soft: color-mix(in srgb, var(--_color---orange--800, #f58236) 16%, #fff);
+  --re-green: var(--_color---green--700, #279857);
+  --re-green-2: var(--_color---green--400, #7dc242);
+  --re-green-soft: color-mix(in srgb, var(--_color---green--400, #7dc242) 22%, #fff);
+  --re-ink: var(--_color---neutral--dark-gray, #242321);
+  --re-muted: var(--_color---neutral--mid-gray-2, #474641);
+  --re-line: var(--_color---neutral--mid-gray-1, #cccabf);
+  --re-line-soft: color-mix(in srgb, var(--_color---neutral--mid-gray-1, #cccabf) 55%, #fff);
+  --re-bg: var(--_color---neutral--light-gray, #f0eee6);
+  --re-card: var(--_color---neutral--white, #fff);
+  --re-shadow: 0 1px 2px rgba(3,13,27,.04), 0 8px 24px -14px rgba(3,13,27,.16);
+  --re-shadow-lg: 0 24px 60px -30px rgba(3,13,27,.4);
+  --re-radius: var(--_components---card--border-radius, .5rem);
+  --re-radius-sm: var(--_components---input--border-radius, .5rem);
+  --re-font: var(--_typography---fonts--primary-font, Outfit, Arial, sans-serif);
+  --re-ease: cubic-bezier(.165,.84,.44,1);
+  font-family: var(--re-font);
+  color: var(--re-ink);
+  line-height: var(--_typography---paragraph-body--line-height, 1.6);
+  -webkit-font-smoothing: antialiased;
+}
+#re-adviesformulier * { box-sizing: border-box; }
+#re-adviesformulier h2, #re-adviesformulier h3, #re-adviesformulier h4 { font-family: var(--re-font); }
+#re-adviesformulier .re-layout { display: grid; grid-template-columns: minmax(0,1fr) 340px; gap: 26px; align-items: start; padding-bottom: 20px; }
+
+/* ---------- Kaart / stap ---------- */
+#re-adviesformulier .re-block { background: var(--re-card); border: 1px solid var(--re-line); border-radius: var(--re-radius); padding: 26px; box-shadow: var(--re-shadow); }
+#re-adviesformulier .re-progress { display: flex; gap: 5px; margin: -4px 0 20px; }
+#re-adviesformulier .re-progress i { flex: 1; height: 5px; border-radius: 9px; background: var(--re-line-soft); transition: background .3s var(--re-ease); }
+#re-adviesformulier .re-progress i.re-done { background: var(--re-blue-dark); }
+#re-adviesformulier .re-progress i.re-now { background: var(--re-blue); }
+#re-adviesformulier .re-step-head { display: flex; align-items: center; gap: 13px; margin-bottom: 6px; }
+#re-adviesformulier .re-step-num { flex: 0 0 auto; width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; background: var(--re-blue); color: #fff; font-weight: 600; font-size: .95rem; }
+#re-adviesformulier .re-step-head h2 { font-size: 1.4rem; color: var(--re-navy); font-weight: 600; letter-spacing: -.02em; margin: 0; line-height: 1.2; }
+#re-adviesformulier .re-step-count { margin-left: auto; font-size: .82rem; color: var(--re-muted); white-space: nowrap; }
+#re-adviesformulier .re-step-sub { color: var(--re-muted); font-size: .92rem; margin: 2px 0 22px 43px; }
+
+/* ---------- Vragen ---------- */
+#re-adviesformulier .re-q { margin-bottom: 24px; animation: re-slideIn .3s ease; }
+#re-adviesformulier .re-q.re-hidden { display: none !important; }
+@keyframes re-slideIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+#re-adviesformulier .re-lab { display: block; font-size: var(--_components---input-label--font-size, .9rem); font-weight: 600; color: var(--re-navy); margin-bottom: 4px; }
+#re-adviesformulier .re-q > .re-lab { font-size: 1rem; }
+#re-adviesformulier .re-lab i { color: var(--re-orange-solid); font-style: normal; }
+#re-adviesformulier .re-lab small { font-weight: 400; color: var(--re-muted); font-size: .85rem; }
+#re-adviesformulier .re-multi { display: inline-block; margin-left: 6px; font-size: .72rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--re-blue-dark); background: var(--re-blue-soft); border-radius: 6px; padding: 2px 7px; vertical-align: 2px; }
+#re-adviesformulier .re-hint { margin: 0 0 12px; font-size: .86rem; color: var(--re-muted); }
+#re-adviesformulier .re-gap { height: 10px; }
+
+/* Keuzetegels – zelfde gedrag als .re-inst in het onderhoudsformulier */
+#re-adviesformulier .re-opts { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
+#re-adviesformulier .re-opts.re-big { grid-template-columns: repeat(2, 1fr); }
+#re-adviesformulier .re-opt { position: relative; border: 1.5px solid var(--re-line); border-radius: var(--re-radius-sm); padding: 14px 40px 14px 14px; cursor: pointer; transition: .18s ease; background: #fff; display: flex; gap: 12px; align-items: center; min-height: 56px; font-weight: 600; font-size: .95rem; color: var(--re-ink); line-height: 1.25; hyphens: auto; overflow-wrap: break-word; }
+#re-adviesformulier .re-opt:hover { border-color: var(--re-blue); transform: translateY(-1px); }
+#re-adviesformulier .re-opt input { position: absolute; opacity: 0; pointer-events: none; }
+#re-adviesformulier .re-opt.re-active { border-color: var(--re-blue); background: var(--re-blue-soft); box-shadow: 0 0 0 3px rgba(1,142,209,.14); }
+#re-adviesformulier .re-opt:has(input:focus-visible) { outline: 2px solid var(--re-blue); outline-offset: 2px; }
+#re-adviesformulier .re-opt .re-ico { flex: 0 0 auto; width: 42px; height: 42px; border-radius: 10px; display: grid; place-items: center; background: var(--re-green-soft); color: var(--re-blue-dark); transition: .15s; }
+#re-adviesformulier .re-opt.re-active .re-ico { background: var(--re-blue); color: #fff; }
+#re-adviesformulier .re-opt .re-ico svg { width: 24px; height: 24px; }
+#re-adviesformulier .re-opt small { display: block; color: var(--re-muted); font-size: .82rem; font-weight: 400; margin-top: 3px; }
+#re-adviesformulier .re-check { position: absolute; top: 50%; right: 12px; margin-top: -10px; width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--re-line); display: grid; place-items: center; transition: .15s; background: #fff; }
+#re-adviesformulier .re-opt.re-multi-opt .re-check { border-radius: 6px; }
+#re-adviesformulier .re-opt.re-active .re-check { background: var(--re-blue); border-color: var(--re-blue); }
+#re-adviesformulier .re-check svg { width: 12px; height: 12px; color: #fff; opacity: 0; transition: .15s; }
+#re-adviesformulier .re-opt.re-active .re-check svg { opacity: 1; }
+/* Compacte chips (bouwjaar, afstand …) */
+#re-adviesformulier .re-opts.re-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+#re-adviesformulier .re-opts.re-chips .re-opt { min-height: 44px; padding: 9px 16px 9px 42px; border-radius: 100rem; font-size: .9rem; }
+#re-adviesformulier .re-opts.re-chips .re-check { right: auto; left: 13px; }
+
+/* ---------- Invoervelden (identiek aan onderhoudsformulier) ---------- */
+#re-adviesformulier .re-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; }
+#re-adviesformulier .re-grid-pers { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+#re-adviesformulier .re-grid-adres { display: grid; grid-template-columns: 1fr .7fr; gap: 14px; }
+#re-adviesformulier .re-span2 { grid-column: 1 / -1; }
+#re-adviesformulier .re-fld { display: block; }
+#re-adviesformulier .re-fld.re-max { max-width: 320px; }
+#re-adviesformulier .re-inwrap { position: relative; display: flex; align-items: center; }
+#re-adviesformulier input[type=text], #re-adviesformulier input[type=email], #re-adviesformulier input[type=tel], #re-adviesformulier textarea {
+  width: 100%; font-family: var(--_components---input--font, var(--re-font)); font-size: var(--_components---input--font-size, 1rem);
+  line-height: var(--_components---input--line-height, 1.4); font-weight: var(--_components---input--font-weight, 400);
+  color: var(--re-ink); background: #fff; border: 1px solid color-mix(in hsl, var(--re-navy) 40%, transparent 60%);
+  border-radius: var(--re-radius-sm); padding: .8rem 1rem; transition: border-color .3s var(--re-ease); margin: 0;
+}
+#re-adviesformulier textarea { min-height: 110px; resize: vertical; }
+#re-adviesformulier input::placeholder, #re-adviesformulier textarea::placeholder { color: color-mix(in hsl, var(--re-navy) 60%, transparent 40%); }
+#re-adviesformulier input:hover, #re-adviesformulier textarea:hover { border-color: var(--re-blue-300); }
+#re-adviesformulier input:focus, #re-adviesformulier textarea:focus { outline: none; border-color: var(--re-blue-dark); }
+#re-adviesformulier .re-pre ~ input { padding-left: 2rem; }
+#re-adviesformulier .re-suf ~ input, #re-adviesformulier input.re-has-suf { padding-right: 7.5rem; }
+#re-adviesformulier .re-pre, #re-adviesformulier .re-suf { position: absolute; top: 50%; transform: translateY(-50%); color: var(--re-muted); font-size: .88rem; font-weight: 500; pointer-events: none; }
+#re-adviesformulier .re-pre { left: 1rem; }
+#re-adviesformulier .re-suf { right: 1rem; }
+#re-adviesformulier .re-invalid input, #re-adviesformulier .re-invalid textarea, #re-adviesformulier input.re-bad { border-color: #d9644a !important; }
+#re-adviesformulier .re-invalid .re-opt { border-color: #eebcae; }
+#re-adviesformulier .re-err { display: none; margin-top: 8px; font-size: .84rem; font-weight: 600; color: #b5452c; }
+#re-adviesformulier .re-invalid .re-err { display: block; }
+
+/* ---------- Meldingen ---------- */
+#re-adviesformulier .re-note { display: flex; gap: 10px; margin: 12px 0 0; padding: 10px 13px; background: var(--re-blue-soft); border-radius: var(--re-radius-sm); color: var(--re-blue-dark); font-size: .9rem; font-weight: 500; }
+#re-adviesformulier .re-note.re-warn { background: var(--re-orange-soft); color: #9c331b; }
+#re-adviesformulier .re-note svg { flex: 0 0 18px; width: 18px; height: 18px; margin-top: 1px; }
+#re-adviesformulier .re-form-msg { display: none; margin-top: 14px; padding: 11px 14px; border-radius: var(--re-radius-sm); font-size: .9rem; font-weight: 600; }
+#re-adviesformulier .re-msg-error { display: block; background: #fbe6e1; color: #9c331b; border: 1px solid #eebcae; }
+
+/* ---------- Uploads ---------- */
+#re-adviesformulier .re-uploads { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+#re-adviesformulier .re-up { position: relative; border: 1.5px dashed var(--re-blue); background: var(--re-blue-soft); border-radius: var(--re-radius-sm); padding: 16px 12px; text-align: center; cursor: pointer; min-height: 140px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; transition: .15s; color: var(--re-blue-dark); }
+#re-adviesformulier .re-up:hover { background: #fff; }
+#re-adviesformulier .re-up input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
+#re-adviesformulier .re-up b { font-size: .9rem; color: var(--re-navy); font-weight: 600; }
+#re-adviesformulier .re-up small { font-size: .8rem; color: var(--re-muted); }
+#re-adviesformulier .re-up svg { width: 26px; height: 26px; }
+#re-adviesformulier .re-up.re-has { border-style: solid; border-color: var(--re-green); background: var(--re-green-soft); }
+#re-adviesformulier .re-thumbs { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+#re-adviesformulier .re-thumbs img { width: 44px; height: 44px; object-fit: cover; border-radius: 6px; }
+#re-adviesformulier .re-thumbs button { position: relative; z-index: 2; padding: 0; border: 0; background: none; cursor: pointer; }
+
+/* ---------- Akkoord ---------- */
+#re-adviesformulier .re-consent { display: flex; gap: 11px; align-items: flex-start; margin-top: 6px; }
+#re-adviesformulier .re-consent input { appearance: none; -webkit-appearance: none; flex: 0 0 auto; width: 20px; height: 20px; margin: 2px 0 0; border: 2px solid var(--re-line); border-radius: 6px; background: #fff center/13px 13px no-repeat; cursor: pointer; transition: .15s; }
+#re-adviesformulier .re-consent input:checked { border-color: var(--re-blue); background-color: var(--re-blue); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 13l4 4L19 7'/%3E%3C/svg%3E"); }
+#re-adviesformulier .re-consent input:focus-visible { outline: 2px solid var(--re-blue); outline-offset: 2px; }
+#re-adviesformulier .re-consent label { font-size: .9rem; color: var(--re-muted); cursor: pointer; }
+#re-adviesformulier .re-consent a { color: var(--re-blue-dark); font-weight: 600; }
+
+/* ---------- Knoppen ---------- */
+#re-adviesformulier .re-actions { display: flex; justify-content: space-between; align-items: center; gap: 12px; border-top: 1px solid var(--re-line-soft); padding-top: 20px; margin-top: 6px; }
+#re-adviesformulier .re-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 100rem; cursor: pointer; text-decoration: none;
+  padding: var(--_components---button--vertical-padding, .7em) calc(var(--_components---button--horizontal-padding, 1em) * 1.6);
+  font-family: var(--_components---button--font, var(--re-font)); font-size: var(--_components---button--font-size, 1rem); font-weight: var(--_components---button--font-weight, 600);
+  line-height: var(--_components---button--line-height, 1.5); color: #fff; background: var(--re-orange); transition: filter .3s var(--re-ease), background .3s var(--re-ease); }
+#re-adviesformulier .re-btn:hover { filter: brightness(.95); }
+#re-adviesformulier .re-btn:disabled { background: #3a4654; cursor: not-allowed; opacity: .8; }
+#re-adviesformulier .re-btn-ghost { background: #fff; color: var(--re-blue-dark); border: 1.5px solid var(--re-line); }
+#re-adviesformulier .re-btn-ghost:hover { border-color: var(--re-blue); background: var(--re-blue-soft); filter: none; }
+#re-adviesformulier .re-btn.re-invisible { visibility: hidden; }
+
+/* ---------- Samenvatting (zelfde als "Jouw abonnement") ---------- */
+#re-adviesformulier .re-summary { position: sticky; top: 100px; }
+#re-adviesformulier .re-sum-card { background: var(--re-navy); color: #fff; border-radius: var(--re-radius); padding: 24px; box-shadow: var(--re-shadow-lg); }
+#re-adviesformulier .re-sum-card h2 { font-size: 1.25rem; margin: 0 0 4px; font-weight: 600; color: #fff; }
+#re-adviesformulier .re-sum-card .re-lead { color: #9fc8df; font-size: .85rem; margin: 0 0 16px; }
+#re-adviesformulier .re-sum-steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+#re-adviesformulier .re-sum-steps li { display: flex; align-items: center; gap: 10px; font-size: .88rem; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.1); color: #7e9bb0; }
+#re-adviesformulier .re-sum-steps li span.re-dotnum { flex: 0 0 22px; height: 22px; border-radius: 6px; display: grid; place-items: center; font-size: .75rem; font-weight: 600; background: rgba(255,255,255,.08); color: #9fc8df; }
+#re-adviesformulier .re-sum-steps li.re-done { color: #dbe8f1; }
+#re-adviesformulier .re-sum-steps li.re-done span.re-dotnum { background: var(--re-green); color: #fff; }
+#re-adviesformulier .re-sum-steps li.re-now { color: #fff; font-weight: 600; }
+#re-adviesformulier .re-sum-steps li.re-now span.re-dotnum { background: var(--re-blue); color: #fff; }
+#re-adviesformulier .re-sum-total { margin-top: 16px; padding-top: 16px; border-top: 2px solid rgba(255,255,255,.2); display: flex; justify-content: space-between; align-items: flex-end; gap: 10px; }
+#re-adviesformulier .re-tlab { font-size: .82rem; color: #9fc8df; }
+#re-adviesformulier .re-tval { font-size: 1.9rem; font-weight: 600; line-height: 1; white-space: nowrap; }
+#re-adviesformulier .re-per { display: block; font-size: .78rem; color: #9fc8df; font-weight: 400; text-align: right; margin-top: 4px; }
+#re-adviesformulier .re-sum-once { margin-top: 12px; background: rgba(255,255,255,.08); border-radius: 8px; padding: 11px 14px; display: flex; justify-content: space-between; gap: 10px; font-size: .84rem; color: #dbe8f1; }
+#re-adviesformulier .re-sum-once b { color: var(--_color---secondary--yellow, #ffd44d); font-weight: 600; white-space: nowrap; }
+#re-adviesformulier .re-sum-foot { font-size: .76rem; color: #7e9bb0; text-align: center; margin: 14px 0 0; line-height: 1.5; }
+#re-adviesformulier .re-sum-foot a { color: #9fc8df; }
+
+/* ---------- Resultaat ---------- */
+#re-adviesformulier .re-success-ico { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; background: var(--re-green-soft); color: var(--re-green); margin-bottom: 14px; }
+#re-adviesformulier .re-success-ico svg { width: 26px; height: 26px; }
+#re-adviesformulier .re-result h2 { font-size: 1.6rem; color: var(--re-navy); font-weight: 600; letter-spacing: -.02em; margin: 0 0 6px; line-height: 1.2; }
+#re-adviesformulier .re-result > p { color: var(--re-muted); margin: 0; }
+#re-adviesformulier .re-calc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin: 22px 0 6px; }
+#re-adviesformulier .re-calc { position: relative; border: 1.5px solid var(--re-line); border-radius: var(--re-radius-sm); padding: 18px; background: #fff; }
+#re-adviesformulier .re-calc.re-rec { border-color: var(--re-blue); background: var(--re-blue-soft); box-shadow: 0 0 0 3px rgba(1,142,209,.14); }
+#re-adviesformulier .re-calc .re-tag { position: absolute; top: -11px; left: 14px; background: var(--re-orange); color: #fff; font-size: .7rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 3px 10px; border-radius: 100rem; }
+#re-adviesformulier .re-calc h3 { font-size: 1rem; color: var(--re-navy); margin: 0 0 6px; font-weight: 600; }
+#re-adviesformulier .re-calc .re-hl { font-size: 1.6rem; font-weight: 600; color: var(--re-green); margin: 0 0 12px; line-height: 1.1; }
+#re-adviesformulier .re-calc .re-hl.re-navy { color: var(--re-navy); }
+#re-adviesformulier .re-calc dl { margin: 0; display: grid; grid-template-columns: 1fr auto; gap: 6px 10px; font-size: .86rem; }
+#re-adviesformulier .re-calc dt { color: var(--re-muted); }
+#re-adviesformulier .re-calc dd { margin: 0; font-weight: 600; text-align: right; color: var(--re-ink); }
+#re-adviesformulier .re-tips { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 9px; }
+#re-adviesformulier .re-tips li { position: relative; padding-left: 24px; font-size: .92rem; color: var(--re-muted); }
+#re-adviesformulier .re-tips li::before { content: ""; position: absolute; left: 0; top: 7px; width: 11px; height: 11px; border-radius: 3px; background: var(--re-green-soft); border: 2px solid var(--re-green); }
+#re-adviesformulier .re-small { font-size: .78rem; color: var(--re-muted); margin-top: 14px; }
+
+@media (max-width: 920px) {
+  #re-adviesformulier .re-layout { grid-template-columns: 1fr; }
+  #re-adviesformulier .re-summary { position: static; }
+  #re-adviesformulier .re-sum-steps { display: none; }
+  #re-adviesformulier .re-sum-total { margin-top: 4px; }
+  #re-adviesformulier .re-block { padding: 20px; }
+}
+@media (max-width: 600px) {
+  #re-adviesformulier .re-opts { grid-template-columns: 1fr 1fr; }
+  #re-adviesformulier .re-opts.re-big, #re-adviesformulier .re-grid-pers, #re-adviesformulier .re-uploads { grid-template-columns: 1fr; }
+  #re-adviesformulier .re-opt { padding: 12px 34px 12px 12px; font-size: .9rem; }
+  #re-adviesformulier .re-opt .re-ico { width: 36px; height: 36px; }
+  #re-adviesformulier .re-step-sub { margin-left: 0; }
+  #re-adviesformulier .re-step-count { display: none; }
+  #re-adviesformulier .re-uploads .re-up { min-height: 96px; }
+}
