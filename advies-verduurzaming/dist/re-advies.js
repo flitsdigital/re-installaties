@@ -1,4 +1,4 @@
-/*! R&E Installaties – Advies verduurzaming v1.0.1 | Flits Digital | github.com/flitsdigital/re-installaties/tree/main/advies-verduurzaming */
+/*! R&E Installaties – Advies verduurzaming v1.1.0 | Flits Digital | github.com/flitsdigital/re-installaties/tree/main/advies-verduurzaming */
 /* ==========================================================================
    R&E Installaties – Advies verduurzaming · widget
    Gebruik in Webflow (Code Embed):
@@ -18,7 +18,7 @@
      n8n is leidend: de cijfers in de rapportmail en op het bedankscherm komen uit n8n. */
   
   var REA_CFG = {
-    versie: '1.0.1',
+    versie: '1.1.0',
     // Standaardtarieven als de klant niets invult (incl. belastingen)
     tariefGas: 1.35,          // € per m³
     tariefStroom: 0.28,       // € per kWh
@@ -481,7 +481,8 @@
       var list = FILES[slot] = FILES[slot] || [];
       var todo = Array.prototype.slice.call(files || [], 0, Math.max(0, 4 - list.length));
       Promise.all(todo.map(compress)).then(function (out) {
-        out.forEach(function (f) { if (f.size < 10 * 1024 * 1024) list.push({ file: f, url: URL.createObjectURL(f) }); });
+        var totaal = function () { return Object.keys(FILES).reduce(function (n, k) { return n + FILES[k].reduce(function (m, x) { return m + x.file.size; }, 0); }, 0); };
+        out.forEach(function (f) { if (f.size < 6 * 1024 * 1024 && totaal() + f.size < 12 * 1024 * 1024) list.push({ file: f, url: URL.createObjectURL(f) }); });
         redrawSlot(slot);
       });
     }

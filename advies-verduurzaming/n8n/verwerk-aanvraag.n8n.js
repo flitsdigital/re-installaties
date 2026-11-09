@@ -5,7 +5,7 @@
    n8n is leidend: de cijfers in de rapportmail en op het bedankscherm komen uit n8n. */
 
 var REA_CFG = {
-  versie: '1.0.1',
+  versie: '1.1.0',
   // Standaardtarieven als de klant niets invult (incl. belastingen)
   tariefGas: 1.35,          // € per m³
   tariefStroom: 0.28,       // € per kWh
@@ -192,7 +192,7 @@ const row = {
   'Besparing hybride (€/jr)': r.hybride ? r.hybride.besparing : '', 'Besparing all-electric (€/jr)': r.allElectric ? r.allElectric.besparing : '',
   'TVT hybride (jr)': r.hybride && r.hybride.terugverdientijd ? dec(r.hybride.terugverdientijd) : '',
   'TVT all-electric (jr)': r.allElectric && r.allElectric.terugverdientijd ? dec(r.allElectric.terugverdientijd) : '',
-  'Advies': adviesTekst, "Foto's (aantal)": fotoKeys.length, 'Fotomap': '',
+  'Advies': adviesTekst, "Foto's (aantal)": fotoKeys.length, 'Fotomap': fotoKeys.length ? 'Als bijlage in leadmail' : '',
   'Akkoord privacy': p.akkoord && p.akkoord.tijdstip ? p.akkoord.tijdstip : 'ja', 'Bron': s(p.bron), 'UTM': utm
 };
 
@@ -201,7 +201,7 @@ const F = 'font-family:Outfit,Arial,Helvetica,sans-serif;';
 const C = { navy: '#030d1b', blauw: '#018ed1', blauwDonker: '#1454a4', zacht: '#e8f3f7', groen: '#279857', groenZacht: '#e6f4d9', oranje: '#f58236', inkt: '#242321', grijs: '#474641', lijn: '#e1dfd6' };
 const tr = (l, v, extra) => '<tr><td style="padding:7px 0;color:' + C.grijs + ';font-size:14px;border-bottom:1px solid ' + C.lijn + '">' + l + '</td><td style="padding:7px 0;text-align:right;font-size:14px;font-weight:600;color:' + C.inkt + ';border-bottom:1px solid ' + C.lijn + ';' + (extra || '') + '">' + v + '</td></tr>';
 const kop = (t) => '<h3 style="' + F + 'margin:26px 0 8px;font-size:17px;color:' + C.navy + ';font-weight:600">' + t + '</h3>';
-const tipsHtml = r.tips.length ? '<ul style="margin:0;padding:0;list-style:none">' + r.tips.map((t) => '<li style="padding:0 0 8px 22px;position:relative;font-size:14px;line-height:1.55;color:' + C.grijs + '"><span style="position:absolute;left:0;top:5px;width:9px;height:9px;border:2px solid ' + C.groen + ';background:' + C.groenZacht + ';border-radius:3px;display:inline-block"></span>' + esc(t) + '</li>').join('') + '</ul>' : '';
+const tipsHtml = r.tips.length ? '<table role="presentation" width="100%" cellpadding="0" cellspacing="0">' + r.tips.map((t) => '<tr><td width="30" valign="top" style="padding:1px 0 12px 0"><div style="width:18px;height:18px;line-height:18px;border-radius:5px;background:' + C.groenZacht + ';border:1px solid ' + C.groen + ';color:' + C.groen + ';font-size:12px;font-weight:700;text-align:center;' + F + '">&#10003;</div></td><td valign="top" style="padding:0 0 12px 0;font-size:14px;line-height:1.55;color:' + C.grijs + ';' + F + '">' + esc(t) + '</td></tr>').join('') + '</table>' : '';
 
 let vergelijking = '';
 if (r.gas && r.hybride && r.advies !== 'airco') {
@@ -285,7 +285,7 @@ const internHtml =
   kop('Antwoorden') + '<table width="100%" cellpadding="0" cellspacing="0">' + antwoordRijen + '</table>' +
   kop('Links') + '<p style="font-size:14px;margin:0">' +
   '<a href="' + INSTELLINGEN.sheetUrl + '" style="color:' + C.blauwDonker + '">Alle aanvragen (Google Sheet)</a>' +
-  (fotoKeys.length ? ' · <a href="__FOTOMAP__" style="color:' + C.blauwDonker + '">' + fotoKeys.length + " foto's bekijken</a>" : " · geen foto's meegestuurd") + '</p>' +
+  (fotoKeys.length ? ' · ' + fotoKeys.length + " foto's als bijlage bij deze mail" : " · geen foto's meegestuurd") + '</p>' +
   '<p style="font-size:12px;color:#7a786f;margin-top:18px">Bron: ' + esc(p.bron) + (utm ? ' · ' + esc(utm) : '') + ' · akkoord privacy: ' + esc(row['Akkoord privacy']) + '</p></div>';
 
 return [{
