@@ -1,4 +1,4 @@
-/*! R&E Installaties – Advies verduurzaming v1.2.0 | Flits Digital | github.com/flitsdigital/re-installaties/tree/main/advies-verduurzaming */
+/*! R&E Installaties – Advies verduurzaming v1.2.1 | Flits Digital | github.com/flitsdigital/re-installaties/tree/main/advies-verduurzaming */
 /* ==========================================================================
    R&E Installaties – Advies verduurzaming · widget
    Gebruik in Webflow (Code Embed):
@@ -19,7 +19,7 @@
      Let op: geen backslashes in dit bestand (het wordt in de n8n-workflow ingesloten). */
   
   var REA_CFG = {
-    versie: '1.2.0',
+    versie: '1.2.1',
     // Standaardtarieven als de klant niets invult (incl. belastingen)
     tariefGas: 1.35,          // € per m³
     tariefStroom: 0.28,       // € per kWh
@@ -47,6 +47,7 @@
     hybrideToestel: 'Xtend eco 5 kW',
     hybridePrijsEx: 6000,
     hybrideSubsidie: 2125,
+    ketelPrijsEx: 2400,       // nieuwe CV-ketel bij hybride als de huidige ketel ouder is dan 10 jaar
     aeToestel: 'Bosch Compress 7 kW met 300 L boiler',
     aePrijsEx: 10694.10,
     aeSubsidie: 3025,
@@ -99,7 +100,8 @@
     var pW = reaNum(A.tGJ) || CFG.tariefWarmte;
     var vastW = reaNum(A.tVastWarmte); if (vastW === null) vastW = CFG.vastWarmte;
   
-    var invHy = Math.round(CFG.hybridePrijsEx * (1 + CFG.btw) - CFG.hybrideSubsidie);
+    var nieuweKetel = v === 'CV-ketel (gas)' && A.ketelLeeftijd === 'Ouder dan 10 jaar';
+    var invHy = Math.round((CFG.hybridePrijsEx + (nieuweKetel ? CFG.ketelPrijsEx : 0)) * (1 + CFG.btw) - CFG.hybrideSubsidie);
     var invAe = Math.round(CFG.aePrijsEx * (1 + CFG.btw) - CFG.aeSubsidie);
   
     var r = {
@@ -113,7 +115,7 @@
       tarieven: { gas: pG, stroom: pS, vastrecht: vast, warmte: pW, vastWarmte: vastW },
       gas: gas, gj: gj, bron: gas ? 'gas' : (gj ? 'warmtenet' : null),
       kostNu: null, hybride: null, allElectric: null,
-      investering: { hybride: invHy, allElectric: invAe, hybrideToestel: CFG.hybrideToestel, aeToestel: CFG.aeToestel },
+      investering: { hybride: invHy, allElectric: invAe, hybrideToestel: CFG.hybrideToestel, aeToestel: CFG.aeToestel, nieuweKetel: nieuweKetel },
       teruglevering: reaNum(A.teruglevering), terugDekking: null,
       boiler: null, boilerRuim: false,
       tips: []
@@ -174,8 +176,8 @@
     // ---- Tips (zelfde tekst op het scherm en in de mail) ----
     var t = r.tips;
     if (advies === 'airco') t.push('U koos voor airconditioning. Onze adviseur bepaalt samen met u het aantal binnenunits en het vermogen per ruimte.');
-    if (slecht) t.push('Uw woning lijkt matig geïsoleerd. Begin met een hybride warmtepomp, of laat eerst extra isoleren. Dan werkt een warmtepomp later zuiniger.');
-    if (v === 'CV-ketel (gas)' && A.ketelLeeftijd === 'Ouder dan 10 jaar') t.push('Uw CV-ketel is ouder dan 10 jaar. Dit is een goed moment om over te stappen, voordat de ketel vervangen moet worden.');
+    if (slecht) t.push('Uw woning lijkt matig geïsoleerd. Met extra isolatie werkt een warmtepomp zuiniger en bespaart u meer. Onze adviseur kijkt met u wat het meeste oplevert.');
+    if (nieuweKetel && advies !== 'airco') t.push('Uw CV-ketel is ouder dan 10 jaar. Bij een hybride warmtepomp rekenen we daarom ook een nieuwe CV-ketel mee. Bij all-electric is een ketel niet meer nodig.');
     if (v === 'Stadsverwarming' && advies !== 'airco') t.push('U zit nu op stadsverwarming. Een hybride warmtepomp is dan niet mogelijk. Of en wanneer u de aansluiting kunt opzeggen, en wat dat kost, verschilt per warmteleverancier. Dat zoeken we voor u uit.');
     if (r.terugDekking) t.push('U levert nu ' + Math.round(r.teruglevering).toLocaleString('nl-NL') + ' kWh per jaar terug aan het net. Daarmee dekt u ongeveer ' + r.terugDekking + '% van het extra stroomverbruik van een all-electric warmtepomp.');
     if (r.boiler && advies === 'all-electric') t.push('Voor uw warm water rekenen we met een boiler van ongeveer ' + r.boiler + ' liter' + (r.boilerRuim ? ' of groter' : '') + '. Onze adviseur stemt dit af op uw gezin en badkamer.');
