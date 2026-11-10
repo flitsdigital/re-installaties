@@ -47,7 +47,7 @@ const sheet = node({{
     documentId: {{ __rl: true, mode: 'id', value: '{SHEET_ID}', cachedResultName: 'R&E – Aanvragen advies verduurzaming' }},
     sheetName: {{ __rl: true, mode: 'id', value: '920963470' }},
     columns: {{ mappingMode: 'autoMapInputData', value: {{}}, schema: {schema} }},
-    options: {{ cellFormat: 'RAW', handlingExtraData: 'ignoreIt' }} }},
+    options: {{ cellFormat: 'RAW', handlingExtraData: 'insertInNewColumn' }} }},
     credentials: {{ googleSheetsOAuth2Api: {{ id: 'djcPl3HNJBZ7aCgu', name: 'Google Sheets account' }} }} }},
   output: [{{ 'Lead-ID': 'RE-261109-AB12' }}]
 }});

@@ -1,4 +1,4 @@
-/*! R&E Installaties – Advies verduurzaming v1.1.1 | Flits Digital | github.com/flitsdigital/re-installaties/tree/main/advies-verduurzaming */
+/*! R&E Installaties – Advies verduurzaming v1.2.0 | Flits Digital | github.com/flitsdigital/re-installaties/tree/main/advies-verduurzaming */
 /* ==========================================================================
    R&E Installaties – Advies verduurzaming · widget
    Gebruik in Webflow (Code Embed):
@@ -15,16 +15,19 @@
   var CSS = "#re-adviesformulier{--re-blue: var(--_color---blue--700, #018ed1);--re-blue-dark: var(--_color---blue--800, #1454a4);--re-blue-soft: var(--_color---blue--100, #e8f3f7);--re-blue-300: var(--_color---blue--300, #4eacdd);--re-navy: var(--_color---blue--900, #030d1b);--re-orange: linear-gradient(90deg, var(--_color---orange--800, #f58236), var(--_color---orange--600, #fa9d47));--re-orange-solid: var(--_color---orange--800, #f58236);--re-orange-soft: color-mix(in srgb, var(--_color---orange--800, #f58236) 16%, #fff);--re-green: var(--_color---green--700, #279857);--re-green-2: var(--_color---green--400, #7dc242);--re-green-soft: color-mix(in srgb, var(--_color---green--400, #7dc242) 22%, #fff);--re-ink: var(--_color---neutral--dark-gray, #242321);--re-muted: var(--_color---neutral--mid-gray-2, #474641);--re-line: var(--_color---neutral--mid-gray-1, #cccabf);--re-line-soft: color-mix(in srgb, var(--_color---neutral--mid-gray-1, #cccabf) 55%, #fff);--re-bg: var(--_color---neutral--light-gray, #f0eee6);--re-card: var(--_color---neutral--white, #fff);--re-shadow: 0 1px 2px rgba(3,13,27,.04), 0 8px 24px -14px rgba(3,13,27,.16);--re-shadow-lg: 0 24px 60px -30px rgba(3,13,27,.4);--re-radius: var(--_components---card--border-radius, .5rem);--re-radius-sm: var(--_components---input--border-radius, .5rem);--re-font: var(--_typography---fonts--primary-font, Outfit, Arial, sans-serif);--re-ease: cubic-bezier(.165,.84,.44,1);font-family:var(--re-font);color:var(--re-ink);line-height:var(--_typography---paragraph-body--line-height, 1.6);-webkit-font-smoothing:antialiased;container:rea / inline-size;display:block;width:100%;max-width:100%}#re-adviesformulier *{box-sizing:border-box}#re-adviesformulier h2,#re-adviesformulier h3,#re-adviesformulier h4{font-family:var(--re-font)}#re-adviesformulier .re-layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:24px;align-items:start;padding-bottom:20px}#re-adviesformulier .re-block,#re-adviesformulier .re-summary{min-width:0}#re-adviesformulier .re-block{background:var(--re-card);border:1px solid var(--re-line);border-radius:var(--re-radius);padding:26px;box-shadow:var(--re-shadow)}#re-adviesformulier .re-progress{display:flex;gap:5px;margin:-4px 0 20px}#re-adviesformulier .re-progress i{flex:1;height:5px;border-radius:9px;background:var(--re-line-soft);transition:background .3s var(--re-ease)}#re-adviesformulier .re-progress i.re-done{background:var(--re-blue-dark)}#re-adviesformulier .re-progress i.re-now{background:var(--re-blue)}#re-adviesformulier .re-step-head{display:flex;align-items:center;gap:13px;margin-bottom:6px}#re-adviesformulier .re-step-num{flex:0 0 auto;width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:var(--re-blue);color:#fff;font-weight:600;font-size:.95rem}#re-adviesformulier .re-step-head h2{font-size:1.4rem;color:var(--re-navy);font-weight:600;letter-spacing:-.02em;margin:0;line-height:1.2}#re-adviesformulier .re-step-count{margin-left:auto;font-size:.82rem;color:var(--re-muted);white-space:nowrap}#re-adviesformulier .re-step-sub{color:var(--re-muted);font-size:.92rem;margin:2px 0 22px 43px}#re-adviesformulier .re-q{margin-bottom:24px;animation:re-slideIn .3s ease}#re-adviesformulier .re-q.re-hidden{display:none!important}@keyframes re-slideIn{0%{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}#re-adviesformulier .re-lab{display:block;font-size:var(--_components---input-label--font-size, .9rem);font-weight:600;color:var(--re-navy);margin-bottom:4px}#re-adviesformulier .re-q>.re-lab{font-size:1rem}#re-adviesformulier .re-lab i{color:var(--re-orange-solid);font-style:normal}#re-adviesformulier .re-lab small{font-weight:400;color:var(--re-muted);font-size:.85rem}#re-adviesformulier .re-multi{display:inline-block;margin-left:6px;font-size:.72rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--re-blue-dark);background:var(--re-blue-soft);border-radius:6px;padding:2px 7px;vertical-align:2px}#re-adviesformulier .re-hint{margin:0 0 12px;font-size:.86rem;color:var(--re-muted)}#re-adviesformulier .re-gap{height:10px}#re-adviesformulier .re-opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,200px),1fr));gap:12px}#re-adviesformulier .re-opts.re-big{grid-template-columns:repeat(2,1fr)}#re-adviesformulier .re-opt{position:relative;border:1.5px solid var(--re-line);border-radius:var(--re-radius-sm);padding:14px 40px 14px 14px;cursor:pointer;transition:.18s ease;background:#fff;display:flex;gap:12px;align-items:center;min-height:56px;font-weight:600;font-size:.95rem;color:var(--re-ink);line-height:1.25;hyphens:auto;-webkit-hyphens:auto;overflow-wrap:anywhere;min-width:0}#re-adviesformulier .re-opt>span:not(.re-ico):not(.re-check){flex:1 1 auto;min-width:0}#re-adviesformulier .re-opt:hover{border-color:var(--re-blue);transform:translateY(-1px)}#re-adviesformulier .re-opt input{position:absolute;opacity:0;pointer-events:none}#re-adviesformulier .re-opt.re-active{border-color:var(--re-blue);background:var(--re-blue-soft);box-shadow:0 0 0 3px #018ed124}#re-adviesformulier .re-opt:has(input:focus-visible){outline:2px solid var(--re-blue);outline-offset:2px}#re-adviesformulier .re-opt .re-ico{flex:0 0 auto;width:42px;height:42px;border-radius:10px;display:grid;place-items:center;background:var(--re-green-soft);color:var(--re-blue-dark);transition:.15s}#re-adviesformulier .re-opt.re-active .re-ico{background:var(--re-blue);color:#fff}#re-adviesformulier .re-opt .re-ico svg{width:24px;height:24px}#re-adviesformulier .re-opt small{display:block;color:var(--re-muted);font-size:.82rem;font-weight:400;margin-top:3px}#re-adviesformulier .re-check{position:absolute;top:50%;right:12px;margin-top:-10px;width:20px;height:20px;border-radius:50%;border:2px solid var(--re-line);display:grid;place-items:center;transition:.15s;background:#fff}#re-adviesformulier .re-opt.re-multi-opt .re-check{border-radius:6px}#re-adviesformulier .re-opt.re-active .re-check{background:var(--re-blue);border-color:var(--re-blue)}#re-adviesformulier .re-check svg{width:12px;height:12px;color:#fff;opacity:0;transition:.15s}#re-adviesformulier .re-opt.re-active .re-check svg{opacity:1}#re-adviesformulier .re-opts.re-chips{display:flex;flex-wrap:wrap;gap:10px}#re-adviesformulier .re-opts.re-chips .re-opt{min-height:44px;padding:9px 16px 9px 42px;border-radius:100rem;font-size:.9rem}#re-adviesformulier .re-opts.re-chips .re-check{right:auto;left:13px}#re-adviesformulier .re-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}#re-adviesformulier .re-grid-pers{display:grid;grid-template-columns:1fr 1fr;gap:14px}#re-adviesformulier .re-grid-adres{display:grid;grid-template-columns:1fr .7fr;gap:14px}#re-adviesformulier .re-span2{grid-column:1 / -1}#re-adviesformulier .re-fld{display:block}#re-adviesformulier .re-fld.re-max{max-width:320px}#re-adviesformulier .re-inwrap{position:relative;display:flex;align-items:center}#re-adviesformulier input[type=text],#re-adviesformulier input[type=email],#re-adviesformulier input[type=tel],#re-adviesformulier textarea{width:100%;font-family:var(--_components---input--font, var(--re-font));font-size:var(--_components---input--font-size, 1rem);line-height:var(--_components---input--line-height, 1.4);font-weight:var(--_components---input--font-weight, 400);color:var(--re-ink);background:#fff;border:1px solid color-mix(in hsl,var(--re-navy) 40%,transparent 60%);border-radius:var(--re-radius-sm);padding:.8rem 1rem;transition:border-color .3s var(--re-ease);margin:0}#re-adviesformulier textarea{min-height:110px;resize:vertical}#re-adviesformulier input::placeholder,#re-adviesformulier textarea::placeholder{color:color-mix(in hsl,var(--re-navy) 60%,transparent 40%)}#re-adviesformulier input:hover,#re-adviesformulier textarea:hover{border-color:var(--re-blue-300)}#re-adviesformulier input:focus,#re-adviesformulier textarea:focus{outline:none;border-color:var(--re-blue-dark)}#re-adviesformulier .re-pre~input{padding-left:2rem}#re-adviesformulier .re-suf~input,#re-adviesformulier input.re-has-suf{padding-right:7.5rem}#re-adviesformulier .re-pre,#re-adviesformulier .re-suf{position:absolute;top:50%;transform:translateY(-50%);color:var(--re-muted);font-size:.88rem;font-weight:500;pointer-events:none}#re-adviesformulier .re-pre{left:1rem}#re-adviesformulier .re-suf{right:1rem}#re-adviesformulier .re-invalid input,#re-adviesformulier .re-invalid textarea,#re-adviesformulier input.re-bad{border-color:#d9644a!important}#re-adviesformulier .re-invalid .re-opt{border-color:#eebcae}#re-adviesformulier .re-err{display:none;margin-top:8px;font-size:.84rem;font-weight:600;color:#b5452c}#re-adviesformulier .re-invalid .re-err{display:block}#re-adviesformulier .re-note{display:flex;gap:10px;margin:12px 0 0;padding:10px 13px;background:var(--re-blue-soft);border-radius:var(--re-radius-sm);color:var(--re-blue-dark);font-size:.9rem;font-weight:500}#re-adviesformulier .re-note.re-warn{background:var(--re-orange-soft);color:#9c331b}#re-adviesformulier .re-note svg{flex:0 0 18px;width:18px;height:18px;margin-top:1px}#re-adviesformulier .re-form-msg{display:none;margin-top:14px;padding:11px 14px;border-radius:var(--re-radius-sm);font-size:.9rem;font-weight:600}#re-adviesformulier .re-msg-error{display:block;background:#fbe6e1;color:#9c331b;border:1px solid #eebcae}#re-adviesformulier .re-uploads{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}#re-adviesformulier .re-up{position:relative;border:1.5px dashed var(--re-blue);background:var(--re-blue-soft);border-radius:var(--re-radius-sm);padding:16px 12px;text-align:center;cursor:pointer;min-height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;transition:.15s;color:var(--re-blue-dark)}#re-adviesformulier .re-up:hover{background:#fff}#re-adviesformulier .re-up input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}#re-adviesformulier .re-up b{font-size:.9rem;color:var(--re-navy);font-weight:600}#re-adviesformulier .re-up small{font-size:.8rem;color:var(--re-muted)}#re-adviesformulier .re-up svg{width:26px;height:26px}#re-adviesformulier .re-up.re-has{border-style:solid;border-color:var(--re-green);background:var(--re-green-soft)}#re-adviesformulier .re-thumbs{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}#re-adviesformulier .re-thumbs img{width:44px;height:44px;object-fit:cover;border-radius:6px}#re-adviesformulier .re-thumbs button{position:relative;z-index:2;padding:0;border:0;background:none;cursor:pointer}#re-adviesformulier .re-consent{display:flex;gap:11px;align-items:flex-start;margin-top:6px}#re-adviesformulier .re-consent input{appearance:none;-webkit-appearance:none;flex:0 0 auto;width:20px;height:20px;margin:2px 0 0;border:2px solid var(--re-line);border-radius:6px;background:#fff center/13px 13px no-repeat;cursor:pointer;transition:.15s}#re-adviesformulier .re-consent input:checked{border-color:var(--re-blue);background-color:var(--re-blue);background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 13l4 4L19 7'/%3E%3C/svg%3E\")}#re-adviesformulier .re-consent input:focus-visible{outline:2px solid var(--re-blue);outline-offset:2px}#re-adviesformulier .re-consent label{font-size:.9rem;color:var(--re-muted);cursor:pointer}#re-adviesformulier .re-consent a{color:var(--re-blue-dark);font-weight:600}#re-adviesformulier .re-actions{display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1px solid var(--re-line-soft);padding-top:20px;margin-top:6px}#re-adviesformulier .re-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:100rem;cursor:pointer;text-decoration:none;padding:var(--_components---button--vertical-padding, .7em) calc(var(--_components---button--horizontal-padding, 1em) * 1.6);font-family:var(--_components---button--font, var(--re-font));font-size:var(--_components---button--font-size, 1rem);font-weight:var(--_components---button--font-weight, 600);line-height:var(--_components---button--line-height, 1.5);color:#fff;background:var(--re-orange);transition:filter .3s var(--re-ease),background .3s var(--re-ease)}#re-adviesformulier .re-btn:hover{filter:brightness(.95)}#re-adviesformulier .re-btn:disabled{background:#3a4654;cursor:not-allowed;opacity:.8}#re-adviesformulier .re-btn-ghost{background:#fff;color:var(--re-blue-dark);border:1.5px solid var(--re-line)}#re-adviesformulier .re-btn-ghost:hover{border-color:var(--re-blue);background:var(--re-blue-soft);filter:none}#re-adviesformulier .re-btn.re-invisible{visibility:hidden}#re-adviesformulier .re-summary{position:sticky;top:100px}#re-adviesformulier .re-sum-card{background:var(--re-navy);color:#fff;border-radius:var(--re-radius);padding:24px;box-shadow:var(--re-shadow-lg)}#re-adviesformulier .re-sum-card h2{font-size:1.25rem;margin:0 0 4px;font-weight:600;color:#fff}#re-adviesformulier .re-sum-card .re-lead{color:#9fc8df;font-size:.85rem;margin:0 0 16px}#re-adviesformulier .re-sum-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}#re-adviesformulier .re-sum-steps li{display:flex;align-items:center;gap:10px;font-size:.88rem;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.1);color:#7e9bb0}#re-adviesformulier .re-sum-steps li span.re-dotnum{flex:0 0 22px;height:22px;border-radius:6px;display:grid;place-items:center;font-size:.75rem;font-weight:600;background:#ffffff14;color:#9fc8df}#re-adviesformulier .re-sum-steps li.re-done{color:#dbe8f1}#re-adviesformulier .re-sum-steps li.re-done span.re-dotnum{background:var(--re-green);color:#fff}#re-adviesformulier .re-sum-steps li.re-now{color:#fff;font-weight:600}#re-adviesformulier .re-sum-steps li.re-now span.re-dotnum{background:var(--re-blue);color:#fff}#re-adviesformulier .re-sum-total{margin-top:16px;padding-top:16px;border-top:2px solid rgba(255,255,255,.2);display:flex;justify-content:space-between;align-items:flex-end;gap:10px}#re-adviesformulier .re-tlab{font-size:.82rem;color:#9fc8df}#re-adviesformulier .re-tval{font-size:1.9rem;font-weight:600;line-height:1;white-space:nowrap}#re-adviesformulier .re-per{display:block;font-size:.78rem;color:#9fc8df;font-weight:400;text-align:right;margin-top:4px}#re-adviesformulier .re-sum-once{margin-top:12px;background:#ffffff14;border-radius:8px;padding:11px 14px;display:flex;justify-content:space-between;gap:10px;font-size:.84rem;color:#dbe8f1}#re-adviesformulier .re-sum-once b{color:var(--_color---secondary--yellow, #ffd44d);font-weight:600;white-space:nowrap}#re-adviesformulier .re-sum-foot{font-size:.76rem;color:#7e9bb0;text-align:center;margin:14px 0 0;line-height:1.5}#re-adviesformulier .re-sum-foot a{color:#9fc8df}#re-adviesformulier .re-success-ico{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;background:var(--re-green-soft);color:var(--re-green);margin-bottom:14px}#re-adviesformulier .re-success-ico svg{width:26px;height:26px}#re-adviesformulier .re-result h2{font-size:1.6rem;color:var(--re-navy);font-weight:600;letter-spacing:-.02em;margin:0 0 6px;line-height:1.2}#re-adviesformulier .re-result>p{color:var(--re-muted);margin:0}#re-adviesformulier .re-calc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:22px 0 6px}#re-adviesformulier .re-calc{position:relative;border:1.5px solid var(--re-line);border-radius:var(--re-radius-sm);padding:18px;background:#fff}#re-adviesformulier .re-calc.re-rec{border-color:var(--re-blue);background:var(--re-blue-soft);box-shadow:0 0 0 3px #018ed124}#re-adviesformulier .re-calc .re-tag{position:absolute;top:-11px;left:14px;background:var(--re-orange);color:#fff;font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:100rem}#re-adviesformulier .re-calc h3{font-size:1rem;color:var(--re-navy);margin:0 0 6px;font-weight:600}#re-adviesformulier .re-calc .re-hl{font-size:1.6rem;font-weight:600;color:var(--re-green);margin:0 0 12px;line-height:1.1}#re-adviesformulier .re-calc .re-hl.re-navy{color:var(--re-navy)}#re-adviesformulier .re-calc dl{margin:0;display:grid;grid-template-columns:1fr auto;gap:6px 10px;font-size:.86rem}#re-adviesformulier .re-calc dt{color:var(--re-muted)}#re-adviesformulier .re-calc dd{margin:0;font-weight:600;text-align:right;color:var(--re-ink)}#re-adviesformulier .re-tips{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:9px}#re-adviesformulier .re-tips li{position:relative;padding-left:24px;font-size:.92rem;color:var(--re-muted)}#re-adviesformulier .re-tips li:before{content:\"\";position:absolute;left:0;top:7px;width:11px;height:11px;border-radius:3px;background:var(--re-green-soft);border:2px solid var(--re-green)}#re-adviesformulier .re-small{font-size:.78rem;color:var(--re-muted);margin-top:14px}@container rea (max-width: 980px){#re-adviesformulier .re-layout{grid-template-columns:minmax(0,1fr)}#re-adviesformulier .re-summary{position:static}#re-adviesformulier .re-sum-steps{display:none}#re-adviesformulier .re-sum-card{padding:18px 22px}#re-adviesformulier .re-sum-card .re-lead{margin-bottom:6px}#re-adviesformulier .re-sum-total{margin-top:4px}}@container rea (max-width: 720px){#re-adviesformulier .re-block{padding:20px}#re-adviesformulier .re-uploads{grid-template-columns:1fr}#re-adviesformulier .re-uploads .re-up{min-height:96px}#re-adviesformulier .re-step-sub{margin-left:0}}@container rea (max-width: 560px){#re-adviesformulier .re-block{padding:18px 16px}#re-adviesformulier .re-opts{grid-template-columns:1fr 1fr}#re-adviesformulier .re-opts.re-big,#re-adviesformulier .re-grid-pers,#re-adviesformulier .re-grid-adres{grid-template-columns:1fr}#re-adviesformulier .re-opt{padding:12px 34px 12px 12px;font-size:.9rem}#re-adviesformulier .re-opt .re-ico{width:36px;height:36px}#re-adviesformulier .re-step-count{display:none}#re-adviesformulier .re-step-head h2{font-size:1.2rem}#re-adviesformulier .re-actions .re-btn{padding-left:1.1em;padding-right:1.1em}}@container rea (max-width: 380px){#re-adviesformulier .re-opts{grid-template-columns:1fr}}";
     /* R&E Installaties – Advies verduurzaming · gedeelde rekenlogica.
      Wordt in de widget gebundeld en door npm run build in n8n/verwerk-aanvraag.n8n.js gezet.
-     n8n is leidend: de cijfers in de rapportmail en op het bedankscherm komen uit n8n. */
+     n8n is leidend: de cijfers in de rapportmail komen uit n8n.
+     Let op: geen backslashes in dit bestand (het wordt in de n8n-workflow ingesloten). */
   
   var REA_CFG = {
-    versie: '1.1.0',
+    versie: '1.2.0',
     // Standaardtarieven als de klant niets invult (incl. belastingen)
     tariefGas: 1.35,          // € per m³
     tariefStroom: 0.28,       // € per kWh
     vastrechtGas: 300,        // € per jaar
-    // Omrekening naar nuttige warmte (kWh)
-    kwhPerM3: 8.8,            // HR-ketel, ~90% van 9,77 kWh
+    tariefWarmte: 40.97,      // € per GJ stadsverwarming (ACM-maximum 2026)
+    vastWarmte: 828,          // € per jaar vaste kosten stadsverwarming (ACM-maximum 2026, incl. meet- en afleverset)
+    // Omrekening naar warmte (kWh)
+    kwhPerM3: 9.8,            // calorische waarde aardgas (R&E)
     kwhPerGJ: 277.8,
     bestaandeWpScop: 3.3,     // bestaande warmtepomp: kWh stroom → kWh warmte
     kwhPerKgPellets: 4.1,     // 4,8 kWh × ~85% rendement
@@ -32,16 +35,23 @@
     // Dimensionering
     vollastUren: 2000,
     maten: [4, 5, 6, 8, 10, 12, 14, 16],
-    // SCOP per situatie
-    scopLtv: 4.0,             // vloerverwarming, geen radiatoren boven
-    scopMix: 3.3,
-    scopSlecht: 2.8,          // matig geïsoleerd
+    // SCOP (R&E)
+    scopSlecht: 2.8,          // all-electric, matig geïsoleerd (praktijkgemiddelde)
+    scopGoed: 3.3,            // all-electric, goed geïsoleerd (geoptimaliseerd)
+    scopHybride: 3.5,         // hybride: de ketel pakt de pieken onder het vriespunt
+    vloerBonus: 1.0,          // vloerverwarming (zonder radiatoren boven) geeft ca. 1 punt extra
     // Hybride
-    hybrideAandeel: 0.65,     // deel van de warmtevraag dat de warmtepomp overneemt
-    hybrideScopBonus: 0.3,
-    // Netto investering (na subsidie) – placeholders, door R&E te bepalen
-    investeringHybride: 4000,
-    investeringAllElectric: 11000
+    hybrideAandeel: 0.70,     // deel van de warmtevraag dat de warmtepomp overneemt
+    // Investering: prijs ex. btw + btw − ISDE-subsidie = netto voor de klant
+    btw: 0.21,
+    hybrideToestel: 'Xtend eco 5 kW',
+    hybridePrijsEx: 6000,
+    hybrideSubsidie: 2125,
+    aeToestel: 'Bosch Compress 7 kW met 300 L boiler',
+    aePrijsEx: 10694.10,
+    aeSubsidie: 3025,
+    // Boiler (all-electric)
+    boilerMaten: [150, 200, 300]
   };
   
   function reaNum(v) {
@@ -56,9 +66,10 @@
     var arr = function (v) { return Array.isArray(v) ? v : (v ? [v] : []); };
     var v = A.verwarming;
     var bij = arr(A.bijverwarming), iso = arr(A.isolatie), ben = arr(A.beneden), bov = arr(A.boven);
+    var r1 = function (n) { return Math.round(n * 10) / 10; };
   
     // ---- Warmtevraag ----
-    var warmte = null, basis = '', gas = null;
+    var warmte = null, basis = '', gas = null, gj = null;
     if (v === 'CV-ketel (gas)') {
       gas = reaNum(A.gasverbruik);
       if (gas) { warmte = gas * CFG.kwhPerM3; basis = Math.round(gas).toLocaleString('nl-NL') + ' m³ gas per jaar'; }
@@ -66,31 +77,30 @@
       var k = reaNum(A.wpVerbruik);
       if (k) { warmte = k * CFG.bestaandeWpScop; basis = Math.round(k).toLocaleString('nl-NL') + ' kWh stroom per jaar'; }
     } else if (v === 'Stadsverwarming') {
-      var g = reaNum(A.gjVerbruik);
-      if (g) { warmte = g * CFG.kwhPerGJ; basis = Math.round(g).toLocaleString('nl-NL') + ' GJ warmte per jaar'; }
+      gj = reaNum(A.gjVerbruik);
+      if (gj) { warmte = gj * CFG.kwhPerGJ; basis = Math.round(gj).toLocaleString('nl-NL') + ' GJ warmte per jaar'; }
     }
     var bijWarmte = (bij.indexOf('Pelletkachel') > -1 ? (reaNum(A.pelletsKg) || 0) * CFG.kwhPerKgPellets : 0) +
                     (bij.indexOf('Houtkachel of open haard') > -1 ? (reaNum(A.houtKg) || 0) * CFG.kwhPerKgHout : 0);
     if (warmte && bijWarmte) basis += ' + bijverwarming';
   
-    // ---- Woningkwaliteit ----
+    // ---- Woningkwaliteit en rendement ----
     var ltv = ben.indexOf('Vloerverwarming') > -1 && bov.indexOf('Radiatoren') === -1;
     var maatregelen = iso.filter(function (x) { return x !== 'Weet ik niet' && x !== 'Niet geïsoleerd'; }).length;
     var slecht = iso.indexOf('Niet geïsoleerd') > -1 || (A.bouwjaar === 'Voor 1975' && maatregelen < 2);
-    var scop = slecht ? CFG.scopSlecht : (ltv ? CFG.scopLtv : CFG.scopMix);
     var goed = !slecht && (['1990 – 2012', 'Na 2012', 'Nieuwbouw'].indexOf(A.bouwjaar) > -1 || maatregelen >= 3);
+    var bonus = ltv ? CFG.vloerBonus : 0;
+    var scopAe = r1((slecht ? CFG.scopSlecht : CFG.scopGoed) + bonus);
+    var scopHy = r1(CFG.scopHybride + bonus);
   
     var pG = reaNum(A.tGas) || CFG.tariefGas;
     var pS = reaNum(A.tStroom) || CFG.tariefStroom;
     var vast = reaNum(A.tVast); if (vast === null) vast = CFG.vastrechtGas;
+    var pW = reaNum(A.tGJ) || CFG.tariefWarmte;
+    var vastW = reaNum(A.tVastWarmte); if (vastW === null) vastW = CFG.vastWarmte;
   
-    // ---- Advies ----
-    var wens = A.wens, advies, adviesBron = 'keuze';
-    if (wens === 'Airconditioning') advies = 'airco';
-    else if (wens === 'Hybride warmtepomp') advies = 'hybride';
-    else if (wens === 'All-electric warmtepomp') advies = 'all-electric';
-    else { adviesBron = 'advies'; advies = (v === 'Warmtepomp' || goed) ? 'all-electric' : 'hybride'; }
-    var labels = { 'hybride': 'Hybride warmtepomp', 'all-electric': 'All-electric warmtepomp', 'airco': 'Airconditioning' };
+    var invHy = Math.round(CFG.hybridePrijsEx * (1 + CFG.btw) - CFG.hybrideSubsidie);
+    var invAe = Math.round(CFG.aePrijsEx * (1 + CFG.btw) - CFG.aeSubsidie);
   
     var r = {
       versie: CFG.versie,
@@ -98,11 +108,14 @@
       basis: basis,
       warmte: warmte ? Math.round(warmte) : null,
       bijWarmte: bijWarmte ? Math.round(bijWarmte) : 0,
-      kw: null, scop: scop, slecht: slecht, goedGeisoleerd: goed, ltv: ltv,
-      advies: advies, adviesLabel: labels[advies], adviesBron: adviesBron,
-      tarieven: { gas: pG, stroom: pS, vastrecht: vast },
-      gas: gas, kostNu: null, hybride: null, allElectric: null,
+      kw: null, scop: scopAe, scopHybride: scopHy, slecht: slecht, goedGeisoleerd: goed, ltv: ltv,
+      advies: null, adviesLabel: null, adviesBron: 'keuze',
+      tarieven: { gas: pG, stroom: pS, vastrecht: vast, warmte: pW, vastWarmte: vastW },
+      gas: gas, gj: gj, bron: gas ? 'gas' : (gj ? 'warmtenet' : null),
+      kostNu: null, hybride: null, allElectric: null,
+      investering: { hybride: invHy, allElectric: invAe, hybrideToestel: CFG.hybrideToestel, aeToestel: CFG.aeToestel },
       teruglevering: reaNum(A.teruglevering), terugDekking: null,
+      boiler: null, boilerRuim: false,
       tips: []
     };
   
@@ -111,33 +124,66 @@
       r.kw = CFG.maten.filter(function (m) { return m >= kwRaw; })[0] || CFG.maten[CFG.maten.length - 1];
     }
   
-    if (gas) {
-      var kostNu = gas * pG + vast;
-      var aeStroom = warmte / scop;
-      var ae = { stroom: Math.round(aeStroom), kosten: Math.round(aeStroom * pS) };
+    // ---- Kosten en besparing ----
+    var tvt = function (inv, besp) { return besp > 0 ? r1(inv / besp) : null; };
+    if (gas || gj) {
+      var kostNu = gas ? gas * pG + vast : gj * pW + vastW;
+      var aeStroom = warmte / scopAe;
+      var ae = { stroom: Math.round(aeStroom), kosten: Math.round(aeStroom * pS), scop: scopAe };
       ae.besparing = Math.round(kostNu - aeStroom * pS);
-      ae.terugverdientijd = ae.besparing > 0 ? Math.round(CFG.investeringAllElectric / ae.besparing * 10) / 10 : null;
-      var hyGas = gas * (1 - CFG.hybrideAandeel);
-      var hyStroom = warmte * CFG.hybrideAandeel / (scop + CFG.hybrideScopBonus);
-      var hy = { stroom: Math.round(hyStroom), gasRest: Math.round(hyGas), kosten: Math.round(hyGas * pG + vast + hyStroom * pS) };
-      hy.besparing = Math.round(kostNu - hy.kosten);
-      hy.terugverdientijd = hy.besparing > 0 ? Math.round(CFG.investeringHybride / hy.besparing * 10) / 10 : null;
-      r.kostNu = Math.round(kostNu); r.allElectric = ae; r.hybride = hy;
+      ae.terugverdientijd = tvt(invAe, ae.besparing);
+      r.kostNu = Math.round(kostNu); r.allElectric = ae;
+      if (gas) {
+        // Hybride kan alleen naast een gasketel
+        var hyGas = gas * (1 - CFG.hybrideAandeel);
+        var hyStroom = warmte * CFG.hybrideAandeel / scopHy;
+        var hy = { stroom: Math.round(hyStroom), gasRest: Math.round(hyGas), kosten: Math.round(hyGas * pG + vast + hyStroom * pS), scop: scopHy };
+        hy.besparing = Math.round(kostNu - (hyGas * pG + vast + hyStroom * pS));
+        hy.terugverdientijd = tvt(invHy, hy.besparing);
+        r.hybride = hy;
+      }
       if (r.teruglevering && ae.stroom) r.terugDekking = Math.min(100, Math.round(r.teruglevering / ae.stroom * 100));
-      r.investering = { hybride: CFG.investeringHybride, allElectric: CFG.investeringAllElectric };
+    }
+  
+    // ---- Advies: eigen keuze, anders de snelste terugverdientijd ----
+    var wens = A.wens, advies;
+    if (wens === 'Airconditioning') advies = 'airco';
+    else if (wens === 'Hybride warmtepomp') advies = 'hybride';
+    else if (wens === 'All-electric warmtepomp') advies = 'all-electric';
+    else {
+      r.adviesBron = 'advies';
+      var tHy = r.hybride && r.hybride.terugverdientijd, tAe = r.allElectric && r.allElectric.terugverdientijd;
+      if (tHy && tAe) advies = tAe <= tHy ? 'all-electric' : 'hybride';
+      else if (tAe) advies = 'all-electric';
+      else if (tHy) advies = 'hybride';
+      else if (v === 'Stadsverwarming' || v === 'Warmtepomp' || goed) advies = 'all-electric';
+      else advies = 'hybride';
+    }
+    r.advies = advies;
+    r.adviesLabel = { 'hybride': 'Hybride warmtepomp', 'all-electric': 'All-electric warmtepomp', 'airco': 'Airconditioning' }[advies];
+  
+    // ---- Boiler (warm water bij all-electric) ----
+    var pers = { '1': 1, '2': 2, '3': 3, '4': 4, '5 of meer': 5 }[A.personen];
+    var bad = { 'Standaard douche': 0, 'Regendouche': 1, 'Bad en standaard douche': 1, 'Bad en/of regendouche': 2 }[A.badkamer];
+    if (pers && bad !== undefined) {
+      var stap = (pers <= 2 ? 0 : (pers <= 4 ? 1 : 2)) + bad + (A.tegelijkWater === 'Ja' ? 1 : 0);
+      r.boiler = CFG.boilerMaten[Math.min(stap, CFG.boilerMaten.length - 1)];
+      r.boilerRuim = stap > CFG.boilerMaten.length - 1;
     }
   
     // ---- Tips (zelfde tekst op het scherm en in de mail) ----
     var t = r.tips;
     if (advies === 'airco') t.push('U koos voor airconditioning. Onze adviseur bepaalt samen met u het aantal binnenunits en het vermogen per ruimte.');
     if (slecht) t.push('Uw woning lijkt matig geïsoleerd. Begin met een hybride warmtepomp, of laat eerst extra isoleren. Dan werkt een warmtepomp later zuiniger.');
-    if (A.ketelLeeftijd === 'Ouder dan 10 jaar') t.push('Uw CV-ketel is ouder dan 10 jaar. Dit is een goed moment om over te stappen, voordat de ketel vervangen moet worden.');
+    if (v === 'CV-ketel (gas)' && A.ketelLeeftijd === 'Ouder dan 10 jaar') t.push('Uw CV-ketel is ouder dan 10 jaar. Dit is een goed moment om over te stappen, voordat de ketel vervangen moet worden.');
+    if (v === 'Stadsverwarming' && advies !== 'airco') t.push('U zit nu op stadsverwarming. Een hybride warmtepomp is dan niet mogelijk. Of en wanneer u de aansluiting kunt opzeggen, en wat dat kost, verschilt per warmteleverancier. Dat zoeken we voor u uit.');
     if (r.terugDekking) t.push('U levert nu ' + Math.round(r.teruglevering).toLocaleString('nl-NL') + ' kWh per jaar terug aan het net. Daarmee dekt u ongeveer ' + r.terugDekking + '% van het extra stroomverbruik van een all-electric warmtepomp.');
+    if (r.boiler && advies === 'all-electric') t.push('Voor uw warm water rekenen we met een boiler van ongeveer ' + r.boiler + ' liter' + (r.boilerRuim ? ' of groter' : '') + '. Onze adviseur stemt dit af op uw gezin en badkamer.');
     if (A.accu === 'Nee, maar ik wil graag advies over een thuisaccu') t.push('U wilt advies over een thuisaccu. Die nemen we mee in het gesprek, zodat u meer van uw eigen zonnestroom gebruikt.');
     if (A.afstand === 'Minder dan 2 m') t.push('De buitenunit komt dicht bij de erfgrens. Daar gelden strengere geluidseisen. Mogelijk adviseren we een extra stil model of een geluidsscherm.');
     if (A.buitenunit === 'Geen mogelijkheden / onbekend') t.push('Er is nog geen plek voor een buitenunit bekend. Onze adviseur bekijkt de mogelijkheden bij u thuis.');
     if (bij.indexOf('Pelletkachel') > -1 || bij.indexOf('Houtkachel of open haard') > -1) t.push('Uw kachel hebben we meegerekend in het vermogen. Zo krijgt u een warmtepomp die ook zonder de kachel genoeg warmte levert.');
-    if (!warmte && advies !== 'airco') t.push('Uw besparing rekenen we precies voor u uit in het persoonlijke advies.');
+    if (!r.allElectric && advies !== 'airco') t.push('Uw besparing rekenen we precies voor u uit in het persoonlijke advies.');
   
     return r;
   }
@@ -155,6 +201,10 @@
     twee: SVG('<path d="M1 12l6-6 5 5 5-5 6 6"/><path d="M3 10v10h18V10M12 11v9"/>'),
     vrij: SVG('<path d="M3 11l9-8 9 8"/><path d="M5 9.5V20h14V9.5"/><path d="M10 20v-6h4v6"/>'),
     app: SVG('<rect x="5" y="2.5" width="14" height="19" rx="1"/><path d="M9 7h1M14 7h1M9 11h1M14 11h1M9 15h1M14 15h1M11 21.5v-3h2v3"/>'),
+    douche: SVG('<path d="M5 21V8a4 4 0 0 1 4-4h1a4 4 0 0 1 4 4"/><path d="M10.5 9h7"/><path d="M12 12.5v1M15 12.5v1M18 12.5v1M13.5 16v1M16.5 16v1M15 19.5v1"/>'),
+    regen: SVG('<path d="M12 2.5v3"/><path d="M5 5.5h14a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2z"/><path d="M6 11v1M9.5 11v1M14.5 11v1M18 11v1M8 15v1M12 11v1M12 15v1M16 15v1M10 19v1M14 19v1"/>'),
+    bad: SVG('<path d="M2.5 13h19v1.5a5 5 0 0 1-5 5h-9a5 5 0 0 1-5-5z"/><path d="M5 13V6.5a2.5 2.5 0 0 1 5 0"/><path d="M7 19.5 6 21.5M17 19.5l1 2"/><path d="M14 4.5h6M16 7.5v1M18.5 7.5v1M17.2 10v1"/>'),
+    badregen: SVG('<path d="M2.5 13h19v1.5a5 5 0 0 1-5 5h-9a5 5 0 0 1-5-5z"/><path d="M7 19.5 6 21.5M17 19.5l1 2"/><path d="M6 3h12"/><path d="M7 6v1M10 6v1M14 6v1M17 6v1M8.5 9v1M12 6v1M12 9v1M15.5 9v1"/>'),
     hybride: SVG('<path d="M12 3c2 3 5 5 5 9a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3-1-3 0-6 1-8z"/>'),
     ae: SVG('<path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/>'),
     airco: SVG('<path d="M12 2v20M4.5 6.5l15 11M19.5 6.5l-15 11M9 3.5l3 2 3-2M9 20.5l3-2 3 2"/>'),
@@ -163,12 +213,20 @@
 
   // ------------------------------------------------------------ vragenlijst
   var STEPS = [
-    { kort: 'Woning & bouwjaar', titel: 'Woning & bouwjaar', sub: 'Zo weten we met wat voor woning we te maken hebben.', velden: [
+    { kort: 'Woning & huishouden', titel: 'Woning & huishouden', sub: 'Zo weten we met wat voor woning en huishouden we te maken hebben.', velden: [
       { id: 'woningtype', type: 'radio', label: 'Wat voor type woning heeft u?', req: true, opties: [
         { v: 'Tussenwoning', ico: I.tussen }, { v: 'Hoekwoning', ico: I.hoek }, { v: 'Twee-onder-één-kap', ico: I.twee },
         { v: 'Vrijstaand', ico: I.vrij }, { v: 'Appartement', ico: I.app }] },
       { id: 'bouwjaar', type: 'radio', cls: 're-chips', label: 'Wat is het geschatte bouwjaar van de woning?', req: true,
-        opties: ['Voor 1975', '1975 – 1990', '1990 – 2012', 'Na 2012', 'Nieuwbouw'] }
+        opties: ['Voor 1975', '1975 – 1990', '1990 – 2012', 'Na 2012', 'Nieuwbouw'] },
+      { id: 'personen', type: 'radio', cls: 're-chips', label: 'Met hoeveel personen woont u in de woning?', req: true,
+        opties: ['1', '2', '3', '4', '5 of meer'] },
+      { id: 'badkamer', type: 'radio', label: 'Wat voor badkamer heeft u?', req: true,
+        hint: 'Hiermee schatten we hoeveel warm water u nodig heeft, en dus hoe groot een eventuele boiler moet zijn.', opties: [
+        { v: 'Standaard douche', ico: I.douche }, { v: 'Regendouche', ico: I.regen },
+        { v: 'Bad en standaard douche', ico: I.bad }, { v: 'Bad en/of regendouche', ico: I.badregen }] },
+      { id: 'tegelijkWater', type: 'radio', cls: 're-chips', label: 'Wilt u op meerdere plekken tegelijk warm water?', req: true,
+        hint: 'Bijvoorbeeld douchen terwijl de keukenkraan of een tweede badkamer warm water gebruikt.', opties: ['Ja', 'Nee'] }
     ] },
     { kort: 'Huidige situatie', titel: 'Huidige situatie, energieverbruik & isolatie', sub: 'Hiermee berekenen we hoeveel warmte uw woning nodig heeft.', velden: [
       { id: 'verwarming', type: 'radio', label: 'Wat is uw huidige manier van verwarmen?', req: true,
@@ -217,7 +275,9 @@
       { id: 'tarieven', type: 'groep', label: 'Wat zijn uw huidige energietarieven?', hint: 'Weet u het niet precies? Laat het leeg, dan rekenen we met gemiddelde tarieven.', inputs: [
         { id: 'tGas', type: 'number', label: 'Gastarief', pre: '€', suf: 'per m³', ph: '1,35', toon: function (a) { return a.verwarming === 'CV-ketel (gas)'; } },
         { id: 'tStroom', type: 'number', label: 'Stroomtarief', pre: '€', suf: 'per kWh', ph: '0,28' },
-        { id: 'tVast', type: 'number', label: 'Vastrecht gas', pre: '€', suf: 'per jaar', ph: '300', toon: function (a) { return a.verwarming === 'CV-ketel (gas)'; } }],
+        { id: 'tVast', type: 'number', label: 'Vastrecht gas', pre: '€', suf: 'per jaar', ph: '300', toon: function (a) { return a.verwarming === 'CV-ketel (gas)'; } },
+        { id: 'tGJ', type: 'number', label: 'Warmtetarief', pre: '€', suf: 'per GJ', ph: '40,97', toon: function (a) { return a.verwarming === 'Stadsverwarming'; } },
+        { id: 'tVastWarmte', type: 'number', label: 'Vaste kosten warmte', pre: '€', suf: 'per jaar', ph: '828', toon: function (a) { return a.verwarming === 'Stadsverwarming'; } }],
         note: function (a) { return a.verwarming === 'CV-ketel (gas)' ? { t: 'Bij all-electric vervalt uw gasaansluiting. Alleen al het vastrecht gas scheelt vaak € 250 tot € 350 per jaar.' } : null; } },
       { id: 'accu', type: 'radio', label: 'Is er een thuisaccu aanwezig?', req: true, opties: ['Ja', 'Nee', 'Nee, maar ik wil graag advies over een thuisaccu'] },
       { id: 'accuKwh', type: 'number', cls: 're-max', label: 'Capaciteit thuisaccu', suf: 'kWh', ph: 'bijv. 10', toon: function (a) { return a.accu === 'Ja'; } }

@@ -26,6 +26,10 @@
     twee: SVG('<path d="M1 12l6-6 5 5 5-5 6 6"/><path d="M3 10v10h18V10M12 11v9"/>'),
     vrij: SVG('<path d="M3 11l9-8 9 8"/><path d="M5 9.5V20h14V9.5"/><path d="M10 20v-6h4v6"/>'),
     app: SVG('<rect x="5" y="2.5" width="14" height="19" rx="1"/><path d="M9 7h1M14 7h1M9 11h1M14 11h1M9 15h1M14 15h1M11 21.5v-3h2v3"/>'),
+    douche: SVG('<path d="M5 21V8a4 4 0 0 1 4-4h1a4 4 0 0 1 4 4"/><path d="M10.5 9h7"/><path d="M12 12.5v1M15 12.5v1M18 12.5v1M13.5 16v1M16.5 16v1M15 19.5v1"/>'),
+    regen: SVG('<path d="M12 2.5v3"/><path d="M5 5.5h14a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2z"/><path d="M6 11v1M9.5 11v1M14.5 11v1M18 11v1M8 15v1M12 11v1M12 15v1M16 15v1M10 19v1M14 19v1"/>'),
+    bad: SVG('<path d="M2.5 13h19v1.5a5 5 0 0 1-5 5h-9a5 5 0 0 1-5-5z"/><path d="M5 13V6.5a2.5 2.5 0 0 1 5 0"/><path d="M7 19.5 6 21.5M17 19.5l1 2"/><path d="M14 4.5h6M16 7.5v1M18.5 7.5v1M17.2 10v1"/>'),
+    badregen: SVG('<path d="M2.5 13h19v1.5a5 5 0 0 1-5 5h-9a5 5 0 0 1-5-5z"/><path d="M7 19.5 6 21.5M17 19.5l1 2"/><path d="M6 3h12"/><path d="M7 6v1M10 6v1M14 6v1M17 6v1M8.5 9v1M12 6v1M12 9v1M15.5 9v1"/>'),
     hybride: SVG('<path d="M12 3c2 3 5 5 5 9a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3-1-3 0-6 1-8z"/>'),
     ae: SVG('<path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/>'),
     airco: SVG('<path d="M12 2v20M4.5 6.5l15 11M19.5 6.5l-15 11M9 3.5l3 2 3-2M9 20.5l3-2 3 2"/>'),
@@ -34,12 +38,20 @@
 
   // ------------------------------------------------------------ vragenlijst
   var STEPS = [
-    { kort: 'Woning & bouwjaar', titel: 'Woning & bouwjaar', sub: 'Zo weten we met wat voor woning we te maken hebben.', velden: [
+    { kort: 'Woning & huishouden', titel: 'Woning & huishouden', sub: 'Zo weten we met wat voor woning en huishouden we te maken hebben.', velden: [
       { id: 'woningtype', type: 'radio', label: 'Wat voor type woning heeft u?', req: true, opties: [
         { v: 'Tussenwoning', ico: I.tussen }, { v: 'Hoekwoning', ico: I.hoek }, { v: 'Twee-onder-één-kap', ico: I.twee },
         { v: 'Vrijstaand', ico: I.vrij }, { v: 'Appartement', ico: I.app }] },
       { id: 'bouwjaar', type: 'radio', cls: 're-chips', label: 'Wat is het geschatte bouwjaar van de woning?', req: true,
-        opties: ['Voor 1975', '1975 – 1990', '1990 – 2012', 'Na 2012', 'Nieuwbouw'] }
+        opties: ['Voor 1975', '1975 – 1990', '1990 – 2012', 'Na 2012', 'Nieuwbouw'] },
+      { id: 'personen', type: 'radio', cls: 're-chips', label: 'Met hoeveel personen woont u in de woning?', req: true,
+        opties: ['1', '2', '3', '4', '5 of meer'] },
+      { id: 'badkamer', type: 'radio', label: 'Wat voor badkamer heeft u?', req: true,
+        hint: 'Hiermee schatten we hoeveel warm water u nodig heeft, en dus hoe groot een eventuele boiler moet zijn.', opties: [
+        { v: 'Standaard douche', ico: I.douche }, { v: 'Regendouche', ico: I.regen },
+        { v: 'Bad en standaard douche', ico: I.bad }, { v: 'Bad en/of regendouche', ico: I.badregen }] },
+      { id: 'tegelijkWater', type: 'radio', cls: 're-chips', label: 'Wilt u op meerdere plekken tegelijk warm water?', req: true,
+        hint: 'Bijvoorbeeld douchen terwijl de keukenkraan of een tweede badkamer warm water gebruikt.', opties: ['Ja', 'Nee'] }
     ] },
     { kort: 'Huidige situatie', titel: 'Huidige situatie, energieverbruik & isolatie', sub: 'Hiermee berekenen we hoeveel warmte uw woning nodig heeft.', velden: [
       { id: 'verwarming', type: 'radio', label: 'Wat is uw huidige manier van verwarmen?', req: true,
@@ -88,7 +100,9 @@
       { id: 'tarieven', type: 'groep', label: 'Wat zijn uw huidige energietarieven?', hint: 'Weet u het niet precies? Laat het leeg, dan rekenen we met gemiddelde tarieven.', inputs: [
         { id: 'tGas', type: 'number', label: 'Gastarief', pre: '€', suf: 'per m³', ph: '1,35', toon: function (a) { return a.verwarming === 'CV-ketel (gas)'; } },
         { id: 'tStroom', type: 'number', label: 'Stroomtarief', pre: '€', suf: 'per kWh', ph: '0,28' },
-        { id: 'tVast', type: 'number', label: 'Vastrecht gas', pre: '€', suf: 'per jaar', ph: '300', toon: function (a) { return a.verwarming === 'CV-ketel (gas)'; } }],
+        { id: 'tVast', type: 'number', label: 'Vastrecht gas', pre: '€', suf: 'per jaar', ph: '300', toon: function (a) { return a.verwarming === 'CV-ketel (gas)'; } },
+        { id: 'tGJ', type: 'number', label: 'Warmtetarief', pre: '€', suf: 'per GJ', ph: '40,97', toon: function (a) { return a.verwarming === 'Stadsverwarming'; } },
+        { id: 'tVastWarmte', type: 'number', label: 'Vaste kosten warmte', pre: '€', suf: 'per jaar', ph: '828', toon: function (a) { return a.verwarming === 'Stadsverwarming'; } }],
         note: function (a) { return a.verwarming === 'CV-ketel (gas)' ? { t: 'Bij all-electric vervalt uw gasaansluiting. Alleen al het vastrecht gas scheelt vaak € 250 tot € 350 per jaar.' } : null; } },
       { id: 'accu', type: 'radio', label: 'Is er een thuisaccu aanwezig?', req: true, opties: ['Ja', 'Nee', 'Nee, maar ik wil graag advies over een thuisaccu'] },
       { id: 'accuKwh', type: 'number', cls: 're-max', label: 'Capaciteit thuisaccu', suf: 'kWh', ph: 'bijv. 10', toon: function (a) { return a.accu === 'Ja'; } }
