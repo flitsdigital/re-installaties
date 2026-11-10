@@ -30,6 +30,7 @@
     regen: SVG('<path d="M12 2.5v3"/><path d="M5 5.5h14a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2z"/><path d="M6 11v1M9.5 11v1M14.5 11v1M18 11v1M8 15v1M12 11v1M12 15v1M16 15v1M10 19v1M14 19v1"/>'),
     bad: SVG('<path d="M2.5 13h19v1.5a5 5 0 0 1-5 5h-9a5 5 0 0 1-5-5z"/><path d="M5 13V6.5a2.5 2.5 0 0 1 5 0"/><path d="M7 19.5 6 21.5M17 19.5l1 2"/><path d="M14 4.5h6M16 7.5v1M18.5 7.5v1M17.2 10v1"/>'),
     badregen: SVG('<path d="M2.5 13h19v1.5a5 5 0 0 1-5 5h-9a5 5 0 0 1-5-5z"/><path d="M7 19.5 6 21.5M17 19.5l1 2"/><path d="M6 3h12"/><path d="M7 6v1M10 6v1M14 6v1M17 6v1M8.5 9v1M12 6v1M12 9v1M15.5 9v1"/>'),
+    meer: SVG('<path d="M1.5 15h12v1a3.5 3.5 0 0 1-3.5 3.5H5A3.5 3.5 0 0 1 1.5 16z"/><path d="M3.5 15V10a1.8 1.8 0 0 1 3.6 0"/><path d="M15 3.5h6.5v16H15z"/><path d="M17 6.5h3M18.5 6.5v2M17.4 10.5v1M19.6 10.5v1M18.5 13v1"/>'),
     hybride: SVG('<path d="M12 3c2 3 5 5 5 9a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3-1-3 0-6 1-8z"/>'),
     ae: SVG('<path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/>'),
     airco: SVG('<path d="M12 2v20M4.5 6.5l15 11M19.5 6.5l-15 11M9 3.5l3 2 3-2M9 20.5l3-2 3 2"/>'),
@@ -44,12 +45,12 @@
         { v: 'Vrijstaand', ico: I.vrij }, { v: 'Appartement', ico: I.app }] },
       { id: 'bouwjaar', type: 'radio', cls: 're-chips', label: 'Wat is het geschatte bouwjaar van de woning?', req: true,
         opties: ['Voor 1975', '1975 – 1990', '1990 – 2012', 'Na 2012', 'Nieuwbouw'] },
-      { id: 'personen', type: 'radio', cls: 're-chips', label: 'Met hoeveel personen woont u in de woning?', req: true,
-        opties: ['1', '2', '3', '4', '5 of meer'] },
+      { id: 'personen', type: 'radio', cls: 're-chips', label: 'Hoeveel bewoners heeft de woning?', req: true,
+        opties: ['1', '2', '3', '4', '5', '6+'] },
       { id: 'badkamer', type: 'radio', label: 'Wat voor badkamer heeft u?', req: true,
-        hint: 'Hiermee schatten we hoeveel warm water u nodig heeft, en dus hoe groot een eventuele boiler moet zijn.', opties: [
+        hint: 'Met het aantal bewoners en uw badkamer schatten we hoeveel gas u voor warm water gebruikt, en hoe groot een eventuele boiler moet zijn.', opties: [
         { v: 'Standaard douche', ico: I.douche }, { v: 'Regendouche', ico: I.regen },
-        { v: 'Bad en standaard douche', ico: I.bad }, { v: 'Bad en/of regendouche', ico: I.badregen }] },
+        { v: 'Bad en standaard douche', ico: I.bad }, { v: 'Bad en/of regendouche', ico: I.badregen }, { v: 'Meerdere badkamers', ico: I.meer }] },
       { id: 'tegelijkWater', type: 'radio', cls: 're-chips', label: 'Wilt u op meerdere plekken tegelijk warm water?', req: true,
         hint: 'Bijvoorbeeld douchen terwijl de keukenkraan of een tweede badkamer warm water gebruikt.', opties: ['Ja', 'Nee'] }
     ] },

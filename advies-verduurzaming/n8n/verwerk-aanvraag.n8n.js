@@ -6,7 +6,7 @@
    Let op: geen backslashes in dit bestand (het wordt in de n8n-workflow ingesloten). */
 
 var REA_CFG = {
-  versie: '1.2.1',
+  versie: '1.3.0',
   // Standaardtarieven als de klant niets invult (incl. belastingen)
   tariefGas: 1.35,          // € per m³
   tariefStroom: 0.28,       // € per kWh
@@ -38,8 +38,14 @@ var REA_CFG = {
   aeToestel: 'Bosch Compress 7 kW met 300 L boiler',
   aePrijsEx: 10694.10,
   aeSubsidie: 3025,
+  // Warm water (tapwater)
+  wwM3PerPersoon: 75,       // m³ gas per bewoner per jaar bij een standaard douche (~20% van een gemiddeld gezinsverbruik)
+  wwFactor: { 'Standaard douche': 1.0, 'Regendouche': 1.4, 'Bad en standaard douche': 1.2, 'Bad en/of regendouche': 1.5, 'Meerdere badkamers': 1.3 },
+  wwMaxAandeel: 0.4,        // warm water nooit meer dan 40% van de totale warmtevraag
+  scopWarmWater: 2.5,       // warmtepomp maakt tapwater op 55–60 °C, dus lager rendement
   // Boiler (all-electric)
-  boilerMaten: [150, 200, 300]
+  boilerMaten: [150, 200, 300],
+  boilerStap: { 'Standaard douche': 0, 'Regendouche': 1, 'Bad en standaard douche': 1, 'Bad en/of regendouche': 2, 'Meerdere badkamers': 2 }
 };
 
 function reaNum(v) {
@@ -72,6 +78,13 @@ function reaBereken(A, CFG) {
                   (bij.indexOf('Houtkachel of open haard') > -1 ? (reaNum(A.houtKg) || 0) * CFG.kwhPerKgHout : 0);
   if (warmte && bijWarmte) basis += ' + bijverwarming';
 
+  // ---- Warm water: schatting uit bewoners en badkamer ----
+  var pers = { '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6+': 6, '5 of meer': 5 }[A.personen];
+  var wwF = CFG.wwFactor[A.badkamer];
+  var warmteWW = 0;
+  if (warmte && pers && wwF) warmteWW = Math.min(pers * CFG.wwM3PerPersoon * wwF * CFG.kwhPerM3, warmte * CFG.wwMaxAandeel);
+  var warmteVerw = warmte ? warmte - warmteWW : null;
+
   // ---- Woningkwaliteit en rendement ----
   var ltv = ben.indexOf('Vloerverwarming') > -1 && bov.indexOf('Radiatoren') === -1;
   var maatregelen = iso.filter(function (x) { return x !== 'Weet ik niet' && x !== 'Niet geïsoleerd'; }).length;
@@ -96,6 +109,9 @@ function reaBereken(A, CFG) {
     heeftIndicatie: !!warmte,
     basis: basis,
     warmte: warmte ? Math.round(warmte) : null,
+    warmteVerwarming: warmteVerw ? Math.round(warmteVerw) : null,
+    warmteWarmWater: Math.round(warmteWW),
+    gasWarmWater: gas && warmteWW ? Math.round(warmteWW / CFG.kwhPerM3) : null,
     bijWarmte: bijWarmte ? Math.round(bijWarmte) : 0,
     kw: null, scop: scopAe, scopHybride: scopHy, slecht: slecht, goedGeisoleerd: goed, ltv: ltv,
     advies: null, adviesLabel: null, adviesBron: 'keuze',
@@ -109,7 +125,7 @@ function reaBereken(A, CFG) {
   };
 
   if (warmte) {
-    var kwRaw = (warmte + bijWarmte) / CFG.vollastUren;
+    var kwRaw = (warmteVerw + bijWarmte) / CFG.vollastUren;   // warm water komt uit de boiler, telt niet mee in het vermogen
     r.kw = CFG.maten.filter(function (m) { return m >= kwRaw; })[0] || CFG.maten[CFG.maten.length - 1];
   }
 
@@ -117,15 +133,16 @@ function reaBereken(A, CFG) {
   var tvt = function (inv, besp) { return besp > 0 ? r1(inv / besp) : null; };
   if (gas || gj) {
     var kostNu = gas ? gas * pG + vast : gj * pW + vastW;
-    var aeStroom = warmte / scopAe;
+    var aeStroom = warmteVerw / scopAe + warmteWW / CFG.scopWarmWater;
     var ae = { stroom: Math.round(aeStroom), kosten: Math.round(aeStroom * pS), scop: scopAe };
     ae.besparing = Math.round(kostNu - aeStroom * pS);
     ae.terugverdientijd = tvt(invAe, ae.besparing);
     r.kostNu = Math.round(kostNu); r.allElectric = ae;
     if (gas) {
       // Hybride kan alleen naast een gasketel
-      var hyGas = gas * (1 - CFG.hybrideAandeel);
-      var hyStroom = warmte * CFG.hybrideAandeel / scopHy;
+      // De warmtepomp neemt 70% van de verwarming over; warm water blijft op de CV-ketel
+      var hyStroom = warmteVerw * CFG.hybrideAandeel / scopHy;
+      var hyGas = gas - warmteVerw * CFG.hybrideAandeel / CFG.kwhPerM3;
       var hy = { stroom: Math.round(hyStroom), gasRest: Math.round(hyGas), kosten: Math.round(hyGas * pG + vast + hyStroom * pS), scop: scopHy };
       hy.besparing = Math.round(kostNu - (hyGas * pG + vast + hyStroom * pS));
       hy.terugverdientijd = tvt(invHy, hy.besparing);
@@ -152,8 +169,7 @@ function reaBereken(A, CFG) {
   r.adviesLabel = { 'hybride': 'Hybride warmtepomp', 'all-electric': 'All-electric warmtepomp', 'airco': 'Airconditioning' }[advies];
 
   // ---- Boiler (warm water bij all-electric) ----
-  var pers = { '1': 1, '2': 2, '3': 3, '4': 4, '5 of meer': 5 }[A.personen];
-  var bad = { 'Standaard douche': 0, 'Regendouche': 1, 'Bad en standaard douche': 1, 'Bad en/of regendouche': 2 }[A.badkamer];
+  var bad = CFG.boilerStap[A.badkamer];
   if (pers && bad !== undefined) {
     var stap = (pers <= 2 ? 0 : (pers <= 4 ? 1 : 2)) + bad + (A.tegelijkWater === 'Ja' ? 1 : 0);
     r.boiler = CFG.boilerMaten[Math.min(stap, CFG.boilerMaten.length - 1)];
@@ -236,7 +252,7 @@ const row = {
   'Aantal panelen': s(a.aantalPanelen), 'Opbrengst (kWh)': s(a.opbrengst), 'Teruglevering (kWh)': s(a.teruglevering),
   'Gastarief': s(a.tGas), 'Stroomtarief': s(a.tStroom), 'Vastrecht gas (jaar)': s(a.tVast), 'Thuisaccu': s(a.accu), 'Accu (kWh)': s(a.accuKwh),
   'Wens': s(a.wens), 'Planning': s(a.planning), 'Opmerkingen': s(a.opmerkingen),
-  'Personen': s(a.personen), 'Badkamer': s(a.badkamer), 'Tegelijk warm water': s(a.tegelijkWater), 'Boiler (L)': r.boiler ? r.boiler + (r.boilerRuim ? '+' : '') : '',
+  'Personen': s(a.personen), 'Badkamer': s(a.badkamer), 'Tegelijk warm water': s(a.tegelijkWater), 'Boiler (L)': r.boiler ? r.boiler + (r.boilerRuim ? '+' : '') : '', 'Gas warm water (m³, schatting)': r.gasWarmWater || '',
   'Warmtetarief (€/GJ)': s(a.tGJ), 'Vaste kosten warmte (jaar)': s(a.tVastWarmte), 'Rekenversie': r.versie,
   'Vermogen (kW)': r.kw || '', 'Warmtevraag (kWh)': r.warmte || '', 'Huidige kosten (€/jr)': r.kostNu || '',
   'Besparing hybride (€/jr)': r.hybride ? r.hybride.besparing : '', 'Besparing all-electric (€/jr)': r.allElectric ? r.allElectric.besparing : '',
@@ -292,7 +308,7 @@ const adviesBlok = r.advies === 'airco'
   ? '<p style="margin:0;font-size:15px;color:' + C.inkt + '"><strong>Uw keuze: Airconditioning</strong></p>'
   : '<p style="margin:0 0 4px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:' + C.blauwDonker + ';font-weight:600">' + (r.adviesBron === 'advies' ? 'Ons advies' : 'Uw keuze') + '</p>' +
     '<p style="margin:0 0 10px;font-size:22px;font-weight:600;color:' + C.navy + '">' + esc(r.adviesLabel) + '</p>' +
-    (r.kw ? '<p style="margin:0;font-size:14px;color:' + C.grijs + '">Geschat vermogen: <strong style="color:' + C.navy + '">± ' + r.kw + ' kW</strong> · op basis van ' + esc(r.basis) + '</p>' : '') +
+    (r.kw ? '<p style="margin:0;font-size:14px;color:' + C.grijs + '">Geschat vermogen: <strong style="color:' + C.navy + '">± ' + r.kw + ' kW</strong> · op basis van ' + esc(r.basis) + (r.gasWarmWater ? ', waarvan ± ' + getal(r.gasWarmWater) + ' m³ voor warm water' : '') + '</p>' : '') +
     (r.allElectric && r.advies !== 'hybride' ? '<p style="margin:6px 0 0;font-size:14px;color:' + C.grijs + '">Verwachte besparing: <strong style="color:' + C.groen + '">' + euro(r.allElectric.besparing) + ' per jaar</strong></p>' : '') +
     (r.hybride && r.advies === 'hybride' ? '<p style="margin:6px 0 0;font-size:14px;color:' + C.grijs + '">Verwachte besparing: <strong style="color:' + C.groen + '">' + euro(r.hybride.besparing) + ' per jaar</strong></p>' : '') +
     (r.boiler && r.advies === 'all-electric' ? '<p style="margin:6px 0 0;font-size:14px;color:' + C.grijs + '">Boiler voor warm water: <strong style="color:' + C.navy + '">± ' + r.boiler + ' liter' + (r.boilerRuim ? ' of groter' : '') + '</strong></p>' : '');
@@ -330,7 +346,7 @@ const LABELS = {
 const antwoordRijen = Object.keys(LABELS).filter((k) => s(lijst(a[k]))).map((k) => tr(LABELS[k], esc(lijst(a[k])), 'font-weight:500')).join('');
 const tvtTxt = (o) => o.terugverdientijd ? dec(o.terugverdientijd) + ' jr' : '–';
 const indicatieRijen = r.heeftIndicatie
-  ? tr('Vermogen', '± ' + r.kw + ' kW') + tr('Warmtevraag', getal(r.warmte) + ' kWh' + (r.bijWarmte ? ' + ' + getal(r.bijWarmte) + ' kWh kachel' : '')) +
+  ? tr('Vermogen', '± ' + r.kw + ' kW') + tr('Warmtevraag', getal(r.warmte) + ' kWh' + (r.warmteWarmWater ? ' (verwarming ' + getal(r.warmteVerwarming) + ' · warm water ' + getal(r.warmteWarmWater) + ')' : '') + (r.bijWarmte ? ' + ' + getal(r.bijWarmte) + ' kWh kachel' : '')) +
     tr('SCOP', 'all-electric ' + dec(r.scop) + (r.hybride ? ' · hybride ' + dec(r.scopHybride) : '') + (r.ltv ? ' (incl. vloerverwarming)' : '')) +
     (r.allElectric ? tr('Huidige kosten', euro(r.kostNu) + '/jr') +
       (r.hybride ? tr('Besparing hybride', euro(r.hybride.besparing) + '/jr · TVT ' + tvtTxt(r.hybride) + ' (inv. ' + euro(r.investering.hybride) + (r.investering.nieuweKetel ? ' incl. nieuwe ketel' : '') + ')') : '') +
