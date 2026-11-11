@@ -98,10 +98,11 @@ if (r.allElectric && r.advies !== 'airco') {
     rij('Besparing per jaar', '–', euro(hy.besparing || 0), euro(ae.besparing), true) +
     (gasBron ? rij('Gasverbruik', getal(r.gas) + ' m³', getal(hy.gasRest || 0) + ' m³', '0 m³') : rij('Warmte van het warmtenet', getal(r.gj) + ' GJ', '–', '0 GJ')) +
     rij('Extra stroomverbruik', '–', getal(hy.stroom || 0) + ' kWh', getal(ae.stroom) + ' kWh') +
+    (r.zon ? rij('Waarvan eigen zonnestroom', '–', getal(hy.zonStroom || 0) + ' kWh', getal(ae.zonStroom) + ' kWh') : '') +
     rij('Terugverdientijd*', '–', tvt(hy), tvt(ae)) + '</table>' +
     '<p style="margin:8px 0 0;font-size:12px;line-height:1.5;color:#7a786f">* Indicatie met ' +
     (gasBron ? '€' + dec(T.gas.toFixed(2)) + '/m³ gas, ' + euro(T.vastrecht) + ' vastrecht gas per jaar, ' : '€' + dec(T.warmte.toFixed(2)) + '/GJ warmte, ' + euro(T.vastWarmte) + ' vaste kosten warmte per jaar, ') +
-    '€' + dec(T.stroom.toFixed(2)) + '/kWh stroom en een netto investering van ' + invTekst + ', incl. btw en na aftrek van de ISDE-subsidie.</p>';
+    '€' + dec(T.stroom.toFixed(2)) + '/kWh stroom van het net' + (r.zon ? ' (eigen zonnestroom: ' + REA_CFG.zonDekking * 100 + '% van het warmtepompverbruik, zonder thuisaccu)' : '') + ' en een netto investering van ' + invTekst + ', incl. btw en na aftrek van de ISDE-subsidie.</p>';
 }
 
 const woning = [
@@ -200,6 +201,7 @@ const indicatieRijen = r.heeftIndicatie
     tr('SCOP', 'all-electric ' + dec(r.scop) + (r.hybride ? ' · hybride ' + dec(r.scopHybride) : '') + (r.ltv ? ' (incl. vloerverwarming)' : '')) +
     (r.allElectric ? tr('Huidige kosten', euro(r.kostNu) + '/jr') +
       (r.hybride ? tr('Besparing hybride', euro(r.hybride.besparing) + '/jr · TVT ' + tvtTxt(r.hybride) + ' (inv. ' + euro(r.investering.hybride) + (r.investering.nieuweKetel ? ' incl. nieuwe ketel' : '') + ')') : '') +
+      (r.zon ? tr('Eigen zonnestroom', (r.hybride ? 'hybride ' + getal(r.hybride.zonStroom) + ' kWh · ' : '') + 'all-electric ' + getal(r.allElectric.zonStroom) + ' kWh (' + r.zonDekking + '%)') : '') +
       tr('Besparing all-electric', euro(r.allElectric.besparing) + '/jr · TVT ' + tvtTxt(r.allElectric) + ' (inv. ' + euro(r.investering.allElectric) + ')') : '') +
     (r.boiler ? tr('Boiler (schatting)', r.boiler + ' L' + (r.boilerRuim ? ' of groter' : '')) : '')
   : tr('Indicatie', 'niet te berekenen (geen verbruik opgegeven)') + (r.boiler ? tr('Boiler (schatting)', r.boiler + ' L' + (r.boilerRuim ? ' of groter' : '')) : '');

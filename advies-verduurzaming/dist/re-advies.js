@@ -1,4 +1,4 @@
-/*! R&E Installaties – Advies verduurzaming v1.4.1 | Flits Digital | github.com/flitsdigital/re-installaties/tree/main/advies-verduurzaming */
+/*! R&E Installaties – Advies verduurzaming v1.5.0 | Flits Digital | github.com/flitsdigital/re-installaties/tree/main/advies-verduurzaming */
 /* ==========================================================================
    R&E Installaties – Advies verduurzaming · widget
    Gebruik in Webflow (Code Embed):
@@ -19,7 +19,7 @@
      Let op: geen backslashes in dit bestand (het wordt in de n8n-workflow ingesloten). */
   
   var REA_CFG = {
-    versie: '1.3.0',
+    versie: '1.4.0',
     // Standaardtarieven als de klant niets invult (incl. belastingen)
     tariefGas: 1.35,          // € per m³
     tariefStroom: 0.28,       // € per kWh
@@ -56,6 +56,8 @@
     wwFactor: { 'Standaard douche': 1.0, 'Regendouche': 1.4, 'Bad en standaard douche': 1.2, 'Bad en/of regendouche': 1.5, 'Meerdere badkamers': 1.3 },
     wwMaxAandeel: 0.4,        // warm water nooit meer dan 40% van de totale warmtevraag
     scopWarmWater: 2.5,       // warmtepomp maakt tapwater op 55–60 °C, dus lager rendement
+    // Zonnepanelen (zonder thuisaccu): 20–30% van het warmtepompverbruik komt uit eigen zonnestroom
+    zonDekking: 0.25,
     // Boiler (all-electric)
     boilerMaten: [150, 200, 300],
     boilerStap: { 'Standaard douche': 0, 'Regendouche': 1, 'Bad en standaard douche': 1, 'Bad en/of regendouche': 2, 'Meerdere badkamers': 2 }
@@ -132,7 +134,7 @@
       gas: gas, gj: gj, bron: gas ? 'gas' : (gj ? 'warmtenet' : null),
       kostNu: null, hybride: null, allElectric: null,
       investering: { hybride: invHy, allElectric: invAe, hybrideToestel: CFG.hybrideToestel, aeToestel: CFG.aeToestel, nieuweKetel: nieuweKetel },
-      teruglevering: reaNum(A.teruglevering), terugDekking: null,
+      teruglevering: reaNum(A.teruglevering), zon: A.zonnepanelen === 'Ja', zonDekking: null,
       boiler: null, boilerRuim: false,
       tips: []
     };
@@ -144,11 +146,18 @@
   
     // ---- Kosten en besparing ----
     var tvt = function (inv, besp) { return besp > 0 ? r1(inv / besp) : null; };
+    // Deel van het warmtepompverbruik dat uit eigen zonnestroom komt (nooit meer dan het huidige overschot)
+    var eigenZon = function (kwh) {
+      if (!r.zon) return 0;
+      var z = kwh * CFG.zonDekking;
+      return r.teruglevering ? Math.min(z, r.teruglevering) : z;
+    };
     if (gas || gj) {
       var kostNu = gas ? gas * pG + vast : gj * pW + vastW;
       var aeStroom = warmteVerw / scopAe + warmteWW / CFG.scopWarmWater;
-      var ae = { stroom: Math.round(aeStroom), kosten: Math.round(aeStroom * pS), scop: scopAe };
-      ae.besparing = Math.round(kostNu - aeStroom * pS);
+      var aeZon = eigenZon(aeStroom);
+      var ae = { stroom: Math.round(aeStroom), zonStroom: Math.round(aeZon), netStroom: Math.round(aeStroom - aeZon), kosten: Math.round((aeStroom - aeZon) * pS), scop: scopAe };
+      ae.besparing = Math.round(kostNu - (aeStroom - aeZon) * pS);
       ae.terugverdientijd = tvt(invAe, ae.besparing);
       r.kostNu = Math.round(kostNu); r.allElectric = ae;
       if (gas) {
@@ -156,12 +165,13 @@
         // De warmtepomp neemt 70% van de verwarming over; warm water blijft op de CV-ketel
         var hyStroom = warmteVerw * CFG.hybrideAandeel / scopHy;
         var hyGas = gas - warmteVerw * CFG.hybrideAandeel / CFG.kwhPerM3;
-        var hy = { stroom: Math.round(hyStroom), gasRest: Math.round(hyGas), kosten: Math.round(hyGas * pG + vast + hyStroom * pS), scop: scopHy };
-        hy.besparing = Math.round(kostNu - (hyGas * pG + vast + hyStroom * pS));
+        var hyZon = eigenZon(hyStroom);
+        var hy = { stroom: Math.round(hyStroom), zonStroom: Math.round(hyZon), netStroom: Math.round(hyStroom - hyZon), gasRest: Math.round(hyGas), kosten: Math.round(hyGas * pG + vast + (hyStroom - hyZon) * pS), scop: scopHy };
+        hy.besparing = Math.round(kostNu - (hyGas * pG + vast + (hyStroom - hyZon) * pS));
         hy.terugverdientijd = tvt(invHy, hy.besparing);
         r.hybride = hy;
       }
-      if (r.teruglevering && ae.stroom) r.terugDekking = Math.min(100, Math.round(r.teruglevering / ae.stroom * 100));
+      if (r.zon && aeStroom) r.zonDekking = Math.round(aeZon / aeStroom * 100);
     }
   
     // ---- Advies: eigen keuze, anders de snelste terugverdientijd ----
@@ -195,7 +205,10 @@
     if (slecht) t.push('Uw woning lijkt matig geïsoleerd. Met extra isolatie werkt een warmtepomp zuiniger en bespaart u meer. Onze adviseur kijkt met u wat het meeste oplevert.');
     if (nieuweKetel && advies !== 'airco') t.push('Uw CV-ketel is ouder dan 10 jaar. Bij een hybride warmtepomp rekenen we daarom ook een nieuwe CV-ketel mee. Bij all-electric is een ketel niet meer nodig.');
     if (v === 'Stadsverwarming' && advies !== 'airco') t.push('U zit nu op stadsverwarming. Een hybride warmtepomp is dan niet mogelijk. Of en wanneer u de aansluiting kunt opzeggen, en wat dat kost, verschilt per warmteleverancier. Dat zoeken we voor u uit.');
-    if (r.terugDekking) t.push('U levert nu ' + Math.round(r.teruglevering).toLocaleString('nl-NL') + ' kWh per jaar terug aan het net. Daarmee dekt u ongeveer ' + r.terugDekking + '% van het extra stroomverbruik van een all-electric warmtepomp.');
+    if (r.zonDekking && advies !== 'airco') {
+      var zOpt = advies === 'hybride' && r.hybride ? r.hybride : r.allElectric;
+      t.push('Met uw zonnepanelen haalt de warmtepomp naar schatting ' + Math.round(zOpt.zonStroom / zOpt.stroom * 100) + '% van zijn stroom uit uw eigen zonnestroom (ongeveer ' + zOpt.zonStroom.toLocaleString('nl-NL') + ' kWh per jaar). De rest neemt u af van het net. Dat hebben we in de besparing meegerekend.');
+    }
     if (r.boiler && advies === 'all-electric') t.push('Voor uw warm water rekenen we met een boiler van ongeveer ' + r.boiler + ' liter' + (r.boilerRuim ? ' of groter' : '') + '. Onze adviseur stemt dit af op uw gezin en badkamer.');
     if (A.accu === 'Nee, maar ik wil graag advies over een thuisaccu') t.push('U wilt advies over een thuisaccu. Die nemen we mee in het gesprek, zodat u meer van uw eigen zonnestroom gebruikt.');
     if (A.afstand === 'Minder dan 2 m') t.push('De buitenunit komt dicht bij de erfgrens. Daar gelden strengere geluidseisen. Mogelijk adviseren we een extra stil model of een geluidsscherm.');
