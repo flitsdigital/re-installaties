@@ -304,9 +304,9 @@ const tipsHtml = r.tips.length ? '<table role="presentation" width="100%" cellpa
 
 let vergelijking = '';
 if (r.allElectric && r.advies !== 'airco') {
-  const beide = r.adviesBron === 'advies';
-  const toonHy = !!r.hybride && (beide || r.advies === 'hybride');
-  const toonAe = beide || r.advies === 'all-electric' || !r.hybride;
+  // Altijd beide opties tonen (hybride alleen als het kan); de keuze of het advies is blauw gemarkeerd
+  const toonHy = !!r.hybride;
+  const toonAe = true;
   const th = (t, rec) => '<th style="' + F + 'padding:10px 8px;font-size:13px;text-align:right;color:' + (rec ? '#fff' : C.navy) + ';background:' + (rec ? C.blauw : C.zacht) + ';border-radius:6px 6px 0 0">' + t + '</th>';
   const td = (v, rec, bold) => '<td style="padding:9px 8px;font-size:14px;text-align:right;border-bottom:1px solid ' + C.lijn + ';' + (rec ? 'background:#f3f9fc;' : '') + (bold ? 'font-weight:600;color:' + C.groen + ';' : 'color:' + C.inkt + ';') + '">' + v + '</td>';
   const lbl = (t) => '<td style="padding:9px 8px 9px 0;font-size:14px;color:' + C.grijs + ';border-bottom:1px solid ' + C.lijn + '">' + t + '</td>';
