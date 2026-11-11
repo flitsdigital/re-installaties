@@ -19,7 +19,7 @@
      Let op: geen backslashes in dit bestand (het wordt in de n8n-workflow ingesloten). */
   
   var REA_CFG = {
-    versie: '1.5.0',
+    versie: '1.5.1',
     // Standaardtarieven als de klant niets invult (incl. belastingen)
     tariefGas: 1.35,          // € per m³
     tariefStroom: 0.28,       // € per kWh
@@ -50,7 +50,7 @@
     hybrideSubsidie: 2125,
     ketelPrijsEx: 2400,       // nieuwe CV-ketel bij hybride als de huidige ketel ouder is dan 10 jaar
     aeToestel: 'Bosch Compress 7 kW met 300 L boiler',
-    aePrijsEx: 10694.10,
+    aePrijsEx: 12180.17,      // = € 14.738 incl. btw
     aeSubsidie: 3025,
     // Warm water (tapwater)
     wwM3PerPersoon: 75,       // m³ gas per bewoner per jaar bij een standaard douche (~20% van een gemiddeld gezinsverbruik)
