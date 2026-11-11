@@ -56,11 +56,20 @@ const bevestig = node({{
   config: {{ name: 'Bevestig aan formulier', parameters: {{ respondWith: 'json',
     responseBody: expr({J("{{ JSON.stringify({ ok: true, leadId: " + V + ".leadId, indicatie: " + V + ".indicatie }) }}")}), options: {{ responseCode: 200 }} }} }}
 }});
+const pdf = node({{
+  type: 'n8n-nodes-base.httpRequest', version: 4.2,
+  config: {{ name: 'PDF maken', onError: 'continueRegularOutput', parameters: {{ method: 'POST', url: 'https://api.pdfbolt.com/v1/direct',
+    authentication: 'genericCredentialType', genericAuthType: 'httpHeaderAuth', sendBody: true, contentType: 'json', specifyBody: 'json',
+    jsonBody: expr({J("{{ JSON.stringify({ html: " + V + ".pdf.html, format: 'A4', printBackground: true, preferCssPageSize: true, waitUntil: 'networkidle', contentDisposition: 'attachment', filename: " + V + ".pdf.bestand }) }}")}),
+    options: {{ timeout: 30000, response: {{ response: {{ responseFormat: 'file', outputPropertyName: 'rapport' }} }} }} }},
+    credentials: {{ httpHeaderAuth: {{ id: 'BiNXEQuTZXzqfKHD', name: 'PDFBolt API' }} }} }},
+  output: [{{}}]
+}});
 const klantmail = node({{
   type: 'n8n-nodes-base.emailSend', version: 2.1,
   config: {{ name: 'Rapport naar klant', onError: 'continueRegularOutput', parameters: {{ fromEmail: 'R&E Installaties <noreply@re-installaties.nl>',
-    toEmail: expr({J("{{ " + V + ".klant.to }}")}), subject: expr({J("{{ " + V + ".klant.subject }}")}), html: expr({J("{{ " + V + ".klant.html }}")}),
-    options: {{ appendAttribution: false, replyTo: 'info@re-installaties.nl' }} }}, credentials: {SMTP} }},
+    toEmail: expr({J("{{ " + V + ".klant.to }}")}), subject: expr({J("{{ " + V + ".klant.subject }}")}), html: expr({J("{{ " + V + ".klant.html.replace('<!--PDF-->', $binary.rapport ? " + V + ".klant.pdfZin : '') }}")}),
+    options: {{ appendAttribution: false, replyTo: 'info@re-installaties.nl', attachments: 'rapport' }} }}, credentials: {SMTP} }},
   output: [{{ accepted: ['a@b.nl'] }}]
 }});
 const leadmail = node({{
@@ -90,7 +99,7 @@ export default workflow('re-advies', 'R&E Installaties — Advies verduurzaming'
   .add(ontvang)
   .to(verwerk)
   .to(geldig
-    .onTrue(regel.to(sheet).to(bevestig).to(klantmail).to(leadmail).to(internmail))
+    .onTrue(regel.to(sheet).to(bevestig).to(pdf).to(klantmail).to(leadmail).to(internmail))
     .onFalse(weiger))
   .add(uitleg)
   .group('Ontvangen & controleren', [verwerk, geldig], {{ description: 'Leest de formulierdata, weert bots en ontbrekende velden en rekent het advies uit.' }})

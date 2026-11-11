@@ -9,4 +9,5 @@ const html = (sheetFout ? let_op('deze aanvraag kon niet in de Google Sheet word
   (mailFout ? let_op('de bevestigingsmail kon niet naar de klant worden gemaild.') : '') + v.intern.html;
 const binary = {};
 (v.fotoKeys || []).forEach((k) => { if (bron.binary && bron.binary[k]) binary[k] = bron.binary[k]; });
+try { const pdf = $('PDF maken').first().binary; if (pdf && pdf.rapport) binary.rapport = pdf.rapport; } catch (e) {}
 return [{ json: { to: v.intern.to, replyTo: v.intern.replyTo, subject: v.intern.subject, html, bijlagen: Object.keys(binary).join(',') }, binary }];
