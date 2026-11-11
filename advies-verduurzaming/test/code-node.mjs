@@ -30,3 +30,4 @@ writeFileSync('test/mail-klant-stad.html', st.klant.html);
 console.log('nieuwe kolommen', ['Personen','Badkamer','Tegelijk warm water','Boiler (L)','Warmtetarief (€/GJ)','Vaste kosten warmte (jaar)','Rekenversie'].map(k => k + '=' + st.row[k]).join(' | '));
 writeFileSync('test/mail-klant-ww.html', sc({ ...vb, ketelLeeftijd: '5 tot 10 jaar' }).klant.html);
 { const j = sc({ ...vb, ketelLeeftijd: '5 tot 10 jaar', opmerkingen: 'Graag bellen na 17:00.' }); writeFileSync('test/rapport.html', Buffer.from(j.pdf.html, 'base64').toString('utf8')); console.log('pdf bestand', j.pdf.bestand, 'b64 kB', Math.round(j.pdf.html.length/1024)); }
+{ const j = sc({ ...vb, tGas: '0,6', tStroom: '1', wens: 'Hybride warmtepomp' }); writeFileSync('test/rapport-neg.html', Buffer.from(j.pdf.html, 'base64').toString('utf8')); console.log('neg', j.indicatie.hybride.besparing, j.indicatie.kw, j.indicatie.kwHybride); }

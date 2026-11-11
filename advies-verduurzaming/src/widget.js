@@ -272,8 +272,9 @@
         return '<li class="' + (i < cur ? 're-done' : i === cur ? 're-now' : '') + '"><span class="re-dotnum">' + (i < cur ? '✓' : i + 1) + '</span>' + esc(s.kort) + '</li>';
       }).join('');
       var r = reaBereken(A);
-      $('kw').textContent = r.kw ? '± ' + r.kw + ' kW' : '–';
-      $('basis').textContent = r.kw ? 'op basis van ' + r.basis : (A.verwarming === 'Overig' ? 'berekenen we in uw advies' : 'vul stap 2 in');
+      var hyKeuze = A.wens === 'Hybride warmtepomp';
+      $('kw').textContent = r.kw ? '± ' + (hyKeuze ? r.kwHybride : r.kw) + ' kW' : '–';
+      $('basis').textContent = r.kw ? (hyKeuze ? 'hybride (50%) · ' : (A.wens === 'All-electric warmtepomp' ? '' : 'hybride ± ' + r.kwHybride + ' kW · ')) + 'op basis van ' + r.basis : (A.verwarming === 'Overig' ? 'berekenen we in uw advies' : 'vul stap 2 in');
       $('once').innerHTML = r.kostNu && cur >= 3 ? '<div class="re-sum-once"><span>Huidige stookkosten</span><b>' + euro(r.kostNu) + ' / jaar</b></div>' : '';
     }
 

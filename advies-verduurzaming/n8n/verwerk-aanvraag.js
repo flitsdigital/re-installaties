@@ -62,7 +62,7 @@ const row = {
   'Wens': s(a.wens), 'Planning': s(a.planning), 'Opmerkingen': s(a.opmerkingen),
   'Personen': s(a.personen), 'Badkamer': s(a.badkamer), 'Tegelijk warm water': s(a.tegelijkWater), 'Boiler (L)': r.boiler ? r.boiler + (r.boilerRuim ? '+' : '') : '', 'Gas warm water (m³, schatting)': r.gasWarmWater || '',
   'Warmtetarief (€/GJ)': s(a.tGJ), 'Vaste kosten warmte (jaar)': s(a.tVastWarmte), 'Rekenversie': r.versie,
-  'Vermogen (kW)': r.kw || '', 'Warmtevraag (kWh)': r.warmte || '', 'Huidige kosten (€/jr)': r.kostNu || '',
+  'Vermogen (kW)': r.kw || '', 'Vermogen hybride (kW)': r.kwHybride || '', 'Tariefcorrecties': r.correcties.join('; '), 'Warmtevraag (kWh)': r.warmte || '', 'Huidige kosten (€/jr)': r.kostNu || '',
   'Besparing hybride (€/jr)': r.hybride ? r.hybride.besparing : '', 'Besparing all-electric (€/jr)': r.allElectric ? r.allElectric.besparing : '',
   'TVT hybride (jr)': r.hybride && r.hybride.terugverdientijd ? dec(r.hybride.terugverdientijd) : '',
   'TVT all-electric (jr)': r.allElectric && r.allElectric.terugverdientijd ? dec(r.allElectric.terugverdientijd) : '',
@@ -89,13 +89,15 @@ if (r.allElectric && r.advies !== 'airco') {
   const hy = r.hybride || {}, ae = r.allElectric;
   const rij = (l, vNu, vHy, vAe, bold) => '<tr>' + lbl(l) + td(vNu, false) + (toonHy ? td(vHy, recHy, bold) : '') + (toonAe ? td(vAe, recAe, bold) : '') + '</tr>';
   const tvt = (o) => o.terugverdientijd ? '± ' + dec(o.terugverdientijd) + ' jaar' : '–';
+  const besp = (o) => o.besparing > 0 ? euro(o.besparing) : '<span style="color:#7a786f;font-weight:500">geen</span>';
   const gasBron = r.bron === 'gas';
   const T = r.tarieven, inv = r.investering;
   const invTekst = [toonHy ? euro(inv.hybride) + ' voor een hybride warmtepomp (bijv. ' + inv.hybrideToestel + (inv.nieuweKetel ? ', incl. nieuwe CV-ketel' : '') + ')' : '', toonAe ? euro(inv.allElectric) + ' voor een all-electric warmtepomp (bijv. ' + inv.aeToestel + ')' : ''].filter(Boolean).join(' of ');
   vergelijking = kop('Wat levert het u op?') +
     '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:separate;border-spacing:0;' + F + '"><tr><th></th>' + th('Nu', false) + (toonHy ? th('Hybride', recHy) : '') + (toonAe ? th('All-electric', recAe) : '') + '</tr>' +
     rij('Energiekosten per jaar', euro(r.kostNu), euro(hy.kosten || 0), euro(ae.kosten)) +
-    rij('Besparing per jaar', '–', euro(hy.besparing || 0), euro(ae.besparing), true) +
+    rij('Besparing per jaar', '–', besp(hy), besp(ae), true) +
+    (r.kw ? rij('Vermogen warmtepomp', '–', '± ' + r.kwHybride + ' kW', '± ' + r.kw + ' kW') : '') +
     (gasBron ? rij('Gasverbruik', getal(r.gas) + ' m³', getal(hy.gasRest || 0) + ' m³', '0 m³') : rij('Warmte van het warmtenet', getal(r.gj) + ' GJ', '–', '0 GJ')) +
     rij('Extra stroomverbruik', '–', getal(hy.stroom || 0) + ' kWh', getal(ae.stroom) + ' kWh') +
     (r.zon ? rij('Waarvan eigen zonnestroom', '–', getal(hy.zonStroom || 0) + ' kWh', getal(ae.zonStroom) + ' kWh') : '') +
@@ -119,9 +121,9 @@ const adviesBlok = r.advies === 'airco'
   ? '<p style="margin:0;font-size:15px;color:' + C.inkt + '"><strong>Uw keuze: Airconditioning</strong></p>'
   : '<p style="margin:0 0 4px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:' + C.blauwDonker + ';font-weight:600">' + (r.adviesBron === 'advies' ? 'Ons advies' : 'Uw keuze') + '</p>' +
     '<p style="margin:0 0 10px;font-size:22px;font-weight:600;color:' + C.navy + '">' + esc(r.adviesLabel) + '</p>' +
-    (r.kw ? '<p style="margin:0;font-size:14px;color:' + C.grijs + '">Geschat vermogen: <strong style="color:' + C.navy + '">± ' + r.kw + ' kW</strong> · op basis van ' + esc(r.basis) + (r.gasWarmWater ? ', waarvan ± ' + getal(r.gasWarmWater) + ' m³ voor warm water' : '') + '</p>' : '') +
-    (r.allElectric && r.advies !== 'hybride' ? '<p style="margin:6px 0 0;font-size:14px;color:' + C.grijs + '">Verwachte besparing: <strong style="color:' + C.groen + '">' + euro(r.allElectric.besparing) + ' per jaar</strong></p>' : '') +
-    (r.hybride && r.advies === 'hybride' ? '<p style="margin:6px 0 0;font-size:14px;color:' + C.grijs + '">Verwachte besparing: <strong style="color:' + C.groen + '">' + euro(r.hybride.besparing) + ' per jaar</strong></p>' : '') +
+    (r.kw ? '<p style="margin:0;font-size:14px;color:' + C.grijs + '">Geschat vermogen: <strong style="color:' + C.navy + '">± ' + (r.advies === 'hybride' ? r.kwHybride : r.kw) + ' kW</strong> · op basis van ' + esc(r.basis) + (r.gasWarmWater ? ', waarvan ± ' + getal(r.gasWarmWater) + ' m³ voor warm water' : '') + '</p>' : '') +
+    (r.allElectric && r.advies !== 'hybride' && r.allElectric.besparing > 0 ? '<p style="margin:6px 0 0;font-size:14px;color:' + C.grijs + '">Verwachte besparing: <strong style="color:' + C.groen + '">' + euro(r.allElectric.besparing) + ' per jaar</strong></p>' : '') +
+    (r.hybride && r.advies === 'hybride' && r.hybride.besparing > 0 ? '<p style="margin:6px 0 0;font-size:14px;color:' + C.grijs + '">Verwachte besparing: <strong style="color:' + C.groen + '">' + euro(r.hybride.besparing) + ' per jaar</strong></p>' : '') +
     (r.boiler && r.advies === 'all-electric' ? '<p style="margin:6px 0 0;font-size:14px;color:' + C.grijs + '">Boiler voor warm water: <strong style="color:' + C.navy + '">± ' + r.boiler + ' liter' + (r.boilerRuim ? ' of groter' : '') + '</strong></p>' : '');
 
 // Klantmail bij de PDF: kort, het rapport zit in de bijlage
@@ -197,7 +199,7 @@ const LABELS = {
 const antwoordRijen = Object.keys(LABELS).filter((k) => s(lijst(a[k]))).map((k) => tr(LABELS[k], esc(lijst(a[k])), 'font-weight:500')).join('');
 const tvtTxt = (o) => o.terugverdientijd ? dec(o.terugverdientijd) + ' jr' : '–';
 const indicatieRijen = r.heeftIndicatie
-  ? tr('Vermogen', '± ' + r.kw + ' kW') + tr('Warmtevraag', getal(r.warmte) + ' kWh' + (r.warmteWarmWater ? ' (verwarming ' + getal(r.warmteVerwarming) + ' · warm water ' + getal(r.warmteWarmWater) + ')' : '') + (r.bijWarmte ? ' + ' + getal(r.bijWarmte) + ' kWh kachel' : '')) +
+  ? tr('Vermogen', 'all-electric ± ' + r.kw + ' kW · hybride ± ' + r.kwHybride + ' kW') + tr('Warmtevraag', getal(r.warmte) + ' kWh' + (r.warmteWarmWater ? ' (verwarming ' + getal(r.warmteVerwarming) + ' · warm water ' + getal(r.warmteWarmWater) + ')' : '') + (r.bijWarmte ? ' + ' + getal(r.bijWarmte) + ' kWh kachel' : '')) +
     tr('SCOP', 'all-electric ' + dec(r.scop) + (r.hybride ? ' · hybride ' + dec(r.scopHybride) : '') + (r.ltv ? ' (incl. vloerverwarming)' : '')) +
     (r.allElectric ? tr('Huidige kosten', euro(r.kostNu) + '/jr') +
       (r.hybride ? tr('Besparing hybride', euro(r.hybride.besparing) + '/jr · TVT ' + tvtTxt(r.hybride) + ' (inv. ' + euro(r.investering.hybride) + (r.investering.nieuweKetel ? ' incl. nieuwe ketel' : '') + ')') : '') +
@@ -213,6 +215,7 @@ const internHtml =
   '<table width="100%" cellpadding="0" cellspacing="0" style="background:' + C.zacht + ';border-radius:8px"><tr><td style="padding:14px 18px;font-size:15px">' +
   '<strong style="font-size:17px;color:' + C.navy + '">' + esc(naam) + '</strong><br>' + esc(adres) + '<br>' +
   '<a href="tel:' + esc(s(a.telefoon).replace(/[^0-9+]/g, '')) + '" style="color:' + C.blauwDonker + '">' + esc(a.telefoon) + '</a> · <a href="mailto:' + esc(a.email) + '" style="color:' + C.blauwDonker + '">' + esc(a.email) + '</a></td></tr></table>' +
+  (r.correcties.length ? '<p style="background:#fff4e8;color:#9c331b;padding:8px 12px;border-radius:6px;font-size:14px"><b>Tarieven aangepast:</b> ' + r.correcties.map(esc).join('; ') + '</p>' : '') +
   kop('Indicatie') + '<table width="100%" cellpadding="0" cellspacing="0">' + indicatieRijen + '</table>' +
   kop('Antwoorden') + '<table width="100%" cellpadding="0" cellspacing="0">' + antwoordRijen + '</table>' +
   kop('Links') + '<p style="font-size:14px;margin:0">' +
@@ -230,7 +233,7 @@ return [{
       subjectZonderPdf: 'Uw adviesaanvraag is ontvangen – R&E Installaties', htmlZonderPdf: klantHtmlZonderPdf },
     intern: {
       to: isTest ? INSTELLINGEN.testOntvanger : INSTELLINGEN.interneOntvanger, replyTo: s(a.email),
-      subject: (isTest ? '[TEST] ' : '') + 'Nieuwe adviesaanvraag – ' + naam + ', ' + s(a.plaats) + ' (' + (r.adviesLabel || 'maatwerk') + (r.kw ? ', ± ' + r.kw + ' kW' : '') + ')',
+      subject: (isTest ? '[TEST] ' : '') + 'Nieuwe adviesaanvraag – ' + naam + ', ' + s(a.plaats) + ' (' + (r.adviesLabel || 'maatwerk') + (r.kw ? ', ± ' + (r.advies === 'hybride' ? r.kwHybride : r.kw) + ' kW' : '') + ')',
       html: internHtml
     }
   },

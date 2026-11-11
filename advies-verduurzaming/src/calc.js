@@ -4,7 +4,7 @@
    Let op: geen backslashes in dit bestand (het wordt in de n8n-workflow ingesloten). */
 
 var REA_CFG = {
-  versie: '1.4.0',
+  versie: '1.5.0',
   // Standaardtarieven als de klant niets invult (incl. belastingen)
   tariefGas: 1.35,          // € per m³
   tariefStroom: 0.28,       // € per kWh
@@ -27,6 +27,7 @@ var REA_CFG = {
   vloerBonus: 1.0,          // vloerverwarming (zonder radiatoren boven) geeft ca. 1 punt extra
   // Hybride
   hybrideAandeel: 0.70,     // deel van de warmtevraag dat de warmtepomp overneemt
+  hybrideVermogen: 0.5,     // hybride: 50% van het benodigde vermogen (de ketel vult aan)
   // Investering: prijs ex. btw + btw − ISDE-subsidie = netto voor de klant
   btw: 0.21,
   hybrideToestel: 'Xtend eco 5 kW',
@@ -94,11 +95,25 @@ function reaBereken(A, CFG) {
   var scopAe = r1((slecht ? CFG.scopSlecht : CFG.scopGoed) + bonus);
   var scopHy = r1(CFG.scopHybride + bonus);
 
-  var pG = reaNum(A.tGas) || CFG.tariefGas;
-  var pS = reaNum(A.tStroom) || CFG.tariefStroom;
-  var vast = reaNum(A.tVast); if (vast === null) vast = CFG.vastrechtGas;
-  var pW = reaNum(A.tGJ) || CFG.tariefWarmte;
-  var vastW = reaNum(A.tVastWarmte); if (vastW === null) vastW = CFG.vastWarmte;
+  // Ingevulde tarieven controleren: centen omrekenen, maandbedragen ×12, onzin vervangen door het standaardtarief
+  var correcties = [];
+  var fmt = function (n) { return String(Math.round(n * 100) / 100).replace('.', ','); };
+  // maandGrens: bij jaarbedragen wordt een getal daaronder gelezen als bedrag per maand
+  var tarief = function (veld, naam, def, min, max, maandGrens) {
+    var n = reaNum(A[veld]);
+    if (n === null) return def;
+    if (maandGrens && n < maandGrens) {
+      if (n * 12 >= min && n * 12 <= max) { correcties.push(naam + ' ' + fmt(n) + ' gelezen als per maand: € ' + fmt(n * 12) + ' per jaar'); return n * 12; }
+    } else if (n >= min && n <= max) return n;
+    if (!maandGrens && n / 100 >= min && n / 100 <= max) { correcties.push(naam + ' ' + fmt(n) + ' gelezen als centen: € ' + fmt(n / 100)); return n / 100; }
+    correcties.push(naam + ' ' + fmt(n) + ' lijkt onjuist, gerekend met € ' + fmt(def));
+    return def;
+  };
+  var pG = tarief('tGas', 'Gastarief', CFG.tariefGas, 0.3, 4);
+  var pS = tarief('tStroom', 'Stroomtarief', CFG.tariefStroom, 0.05, 1.2);
+  var vast = tarief('tVast', 'Vastrecht gas', CFG.vastrechtGas, 50, 1500, 60);
+  var pW = tarief('tGJ', 'Warmtetarief', CFG.tariefWarmte, 10, 150);
+  var vastW = tarief('tVastWarmte', 'Vaste kosten warmte', CFG.vastWarmte, 100, 2500, 170);
 
   var nieuweKetel = v === 'CV-ketel (gas)' && A.ketelLeeftijd === 'Ouder dan 10 jaar';
   var invHy = Math.round((CFG.hybridePrijsEx + (nieuweKetel ? CFG.ketelPrijsEx : 0)) * (1 + CFG.btw) - CFG.hybrideSubsidie);
@@ -113,7 +128,7 @@ function reaBereken(A, CFG) {
     warmteWarmWater: Math.round(warmteWW),
     gasWarmWater: gas && warmteWW ? Math.round(warmteWW / CFG.kwhPerM3) : null,
     bijWarmte: bijWarmte ? Math.round(bijWarmte) : 0,
-    kw: null, scop: scopAe, scopHybride: scopHy, slecht: slecht, goedGeisoleerd: goed, ltv: ltv,
+    kw: null, kwHybride: null, correcties: correcties, scop: scopAe, scopHybride: scopHy, slecht: slecht, goedGeisoleerd: goed, ltv: ltv,
     advies: null, adviesLabel: null, adviesBron: 'keuze',
     tarieven: { gas: pG, stroom: pS, vastrecht: vast, warmte: pW, vastWarmte: vastW },
     gas: gas, gj: gj, bron: gas ? 'gas' : (gj ? 'warmtenet' : null),
@@ -127,6 +142,7 @@ function reaBereken(A, CFG) {
   if (warmte) {
     var kwRaw = (warmteVerw + bijWarmte) / CFG.vollastUren;   // warm water komt uit de boiler, telt niet mee in het vermogen
     r.kw = CFG.maten.filter(function (m) { return m >= kwRaw; })[0] || CFG.maten[CFG.maten.length - 1];
+    r.kwHybride = CFG.maten.filter(function (m) { return m >= r.kw * CFG.hybrideVermogen; })[0] || CFG.maten[0];
   }
 
   // ---- Kosten en besparing ----
@@ -199,6 +215,8 @@ function reaBereken(A, CFG) {
   if (A.afstand === 'Minder dan 2 m') t.push('De buitenunit komt dicht bij de erfgrens. Daar gelden strengere geluidseisen. Mogelijk adviseren we een extra stil model of een geluidsscherm.');
   if (A.buitenunit === 'Geen mogelijkheden / onbekend') t.push('Er is nog geen plek voor een buitenunit bekend. Onze adviseur bekijkt de mogelijkheden bij u thuis.');
   if (bij.indexOf('Pelletkachel') > -1 || bij.indexOf('Houtkachel of open haard') > -1) t.push('Uw kachel hebben we meegerekend in het vermogen. Zo krijgt u een warmtepomp die ook zonder de kachel genoeg warmte levert.');
+  var gekozen = advies === 'hybride' ? r.hybride : (advies === 'all-electric' ? r.allElectric : null);
+  if (gekozen && gekozen.besparing <= 0) t.push('Met de ingevulde gegevens levert een ' + r.adviesLabel.toLowerCase() + ' volgens onze berekening geen besparing op. Onze adviseur rekent dit graag samen met u na.');
   if (!r.allElectric && advies !== 'airco') t.push('Uw besparing rekenen we precies voor u uit in het persoonlijke advies.');
 
   return r;
