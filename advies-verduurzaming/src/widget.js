@@ -223,7 +223,7 @@
       var h = '<div class="re-q" data-q="' + f.id + '">';
       if (f.type === 'consent') {
         return h + '<div class="re-consent"><input type="checkbox" id="rea-akkoord" name="akkoord"' + (A.akkoord ? ' checked' : '') + '>' +
-          '<label for="rea-akkoord">Ik ga akkoord met het <a href="' + esc(CONF.privacy) + '" target="_blank" rel="noopener">privacybeleid</a> en ontvang een bevestiging per e-mail. R&amp;E Installaties neemt contact met mij op over mijn advies.</label></div>' +
+          '<label for="rea-akkoord">Ik ga akkoord met het <a href="' + esc(CONF.privacy) + '" target="_blank" rel="noopener">privacybeleid</a> en ontvang mijn persoonlijke adviesrapport per e-mail. R&amp;E Installaties neemt contact met mij op over dit advies.</label></div>' +
           '<div class="re-err">Geef akkoord om uw advies te ontvangen.</div></div>';
       }
       var star = (f.type !== 'groep' && f.type !== 'uploads' && f.type !== 'contact' && isReq(f)) ? ' <i>*</i>' : '';
@@ -462,7 +462,7 @@
       $('form').outerHTML = '<div class="re-result">' +
         '<div class="re-success-ico">' + I.ok + '</div>' +
         '<h2>Bedankt' + (ant.voornaam ? ', ' + esc(ant.voornaam) : '') + '! Uw adviesaanvraag is ontvangen.</h2>' +
-        '<p>We hebben een bevestiging met uw antwoorden gestuurd naar <strong>' + esc(ant.email) + '</strong>. Een adviseur van R&amp;E Installaties neemt zo snel mogelijk contact met u op.' + (leadId ? ' Uw referentie: <strong>' + esc(leadId) + '</strong>.' : '') + '</p></div>';
+        '<p>Uw persoonlijke adviesrapport is onderweg naar <strong>' + esc(ant.email) + '</strong>. Een adviseur van R&amp;E Installaties neemt zo snel mogelijk contact met u op.' + (leadId ? ' Uw referentie: <strong>' + esc(leadId) + '</strong>.' : '') + '</p></div>';
       $('steps').innerHTML = STEPS.map(function (s, i) { return '<li class="re-done"><span class="re-dotnum">✓</span>' + esc(s.kort) + '</li>'; }).join('');
       scrollTop();
     }

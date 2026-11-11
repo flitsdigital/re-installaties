@@ -68,7 +68,7 @@ const pdf = node({{
 const klantmail = node({{
   type: 'n8n-nodes-base.emailSend', version: 2.1,
   config: {{ name: 'Rapport naar klant', onError: 'continueRegularOutput', parameters: {{ fromEmail: 'R&E Installaties <noreply@re-installaties.nl>',
-    toEmail: expr({J("{{ " + V + ".klant.to }}")}), subject: expr({J("{{ " + V + ".klant.subject }}")}), html: expr({J("{{ " + V + ".klant.html.replace('<!--PDF-->', $binary.rapport ? " + V + ".klant.pdfZin : '') }}")}),
+    toEmail: expr({J("{{ " + V + ".klant.to }}")}), subject: expr({J("{{ $binary.rapport ? " + V + ".klant.subject : " + V + ".klant.subjectZonderPdf }}")}), html: expr({J("{{ $binary.rapport ? " + V + ".klant.html : " + V + ".klant.htmlZonderPdf }}")}),
     options: {{ appendAttribution: false, replyTo: 'info@re-installaties.nl', attachments: 'rapport' }} }}, credentials: {SMTP} }},
   output: [{{ accepted: ['a@b.nl'] }}]
 }});

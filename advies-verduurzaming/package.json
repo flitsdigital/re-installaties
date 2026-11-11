@@ -1,6 +1,6 @@
 {
   "name": "re-advies-verduurzaming",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "private": true,
   "description": "R&E Installaties – widget Advies verduurzaming voor Webflow, met n8n-koppeling",
   "type": "module",

@@ -200,8 +200,8 @@ const INSTELLINGEN = {
   telefoon: '0591 327 010',
   email: 'info@re-installaties.nl',
   sheetUrl: 'https://docs.google.com/spreadsheets/d/1ftpvyVpulBY74c-hAUkTU0dJsKI6iR_3_HnOrl4EU-I/edit',
-  // Klantmail: false = alleen "Uw woning in het kort"; true = ook advies, berekening en tips
-  toonBerekeningKlant: false
+  // PDF-rapport: true = met advies, besparing en tips; false = alleen "Uw woning in het kort"
+  toonBerekeningPdf: true
 };
 
 const item = $input.first();
@@ -306,7 +306,7 @@ const woning = [
   ['Bijverwarming', esc(lijst(a.bijverwarming))], ['Buitenunit', esc(a.buitenunit) + (a.afstand ? ' (' + esc(a.afstand) + ' tot erfgrens)' : '')],
   ['Zonnepanelen', esc(a.zonnepanelen) + (a.teruglevering ? ', ' + esc(a.teruglevering) + ' kWh teruglevering' : '')], ['Uw wens', esc(a.wens)], ['Planning', esc(a.planning)]
 ];
-const metBerekening = INSTELLINGEN.toonBerekeningKlant;
+const metBerekening = INSTELLINGEN.toonBerekeningPdf;
 
 const adviesBlok = r.advies === 'airco'
   ? '<p style="margin:0;font-size:15px;color:' + C.inkt + '"><strong>Uw keuze: Airconditioning</strong></p>'
@@ -317,26 +317,40 @@ const adviesBlok = r.advies === 'airco'
     (r.hybride && r.advies === 'hybride' ? '<p style="margin:6px 0 0;font-size:14px;color:' + C.grijs + '">Verwachte besparing: <strong style="color:' + C.groen + '">' + euro(r.hybride.besparing) + ' per jaar</strong></p>' : '') +
     (r.boiler && r.advies === 'all-electric' ? '<p style="margin:6px 0 0;font-size:14px;color:' + C.grijs + '">Boiler voor warm water: <strong style="color:' + C.navy + '">± ' + r.boiler + ' liter' + (r.boilerRuim ? ' of groter' : '') + '</strong></p>' : '');
 
+// Klantmail bij de PDF: kort, het rapport zit in de bijlage
 const klantHtml =
   '<!DOCTYPE html><html lang="nl"><body style="margin:0;padding:0;background:#f0eee6">' +
   '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f0eee6"><tr><td align="center" style="padding:24px 12px">' +
   '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:620px;background:#ffffff;border-radius:10px;overflow:hidden;' + F + 'color:' + C.inkt + '">' +
-  '<tr><td style="background:' + C.navy + ';padding:22px 28px"><span style="' + F + 'color:#fff;font-size:20px;font-weight:600;letter-spacing:.3px">R&amp;E Installaties</span><br><span style="' + F + 'color:#9fc8df;font-size:13px">' + (metBerekening ? 'Uw persoonlijke verduurzamingsadvies' : 'Uw adviesaanvraag') + ' · ' + leadId + '</span></td></tr>' +
+  '<tr><td style="background:' + C.navy + ';padding:22px 28px"><span style="' + F + 'color:#fff;font-size:20px;font-weight:600;letter-spacing:.3px">R&amp;E Installaties</span><br><span style="' + F + 'color:#9fc8df;font-size:13px">Uw persoonlijke adviesrapport · ' + leadId + '</span></td></tr>' +
   '<tr><td style="padding:28px">' +
   '<h2 style="' + F + 'margin:0 0 10px;font-size:22px;color:' + C.navy + ';font-weight:600">Beste ' + esc(a.voornaam) + ',</h2>' +
-  '<p style="margin:0 0 20px;font-size:15px;line-height:1.6;color:' + C.grijs + '">' + (metBerekening
-    ? 'Bedankt voor uw aanvraag. Op basis van uw antwoorden hebben we een eerste advies voor uw woning gemaakt. Hieronder ziet u wat wij u aanraden en wat het u ongeveer oplevert.'
-    : 'Bedankt voor uw aanvraag. We hebben uw gegevens goed ontvangen. Hieronder ziet u een overzicht van uw antwoorden. Daarmee maken we een advies op maat voor uw woning.') + '</p><!--PDF-->' +
-  (metBerekening ? '<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="background:' + C.zacht + ';border-radius:8px;padding:18px 20px;border-left:4px solid ' + C.blauw + '">' + adviesBlok + '</td></tr></table>' +
-    vergelijking + (tipsHtml ? kop('Goed om te weten') + tipsHtml : '') : '') +
-  kop('Uw woning in het kort') + '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="' + F + '">' + woning.map((w) => tr(w[0], w[1])).join('') + '</table>' +
-  kop('Hoe gaat het verder?') +
-  '<p style="margin:0 0 18px;font-size:15px;line-height:1.6;color:' + C.grijs + '">Een adviseur van R&amp;E Installaties neemt zo snel mogelijk contact met u op. We bespreken ' + (metBerekening ? 'het advies' : 'uw situatie') + ' en plannen zo nodig een bezoek aan huis. Daarna ontvangt u ' + (metBerekening ? 'een offerte' : 'een advies en offerte') + ' op maat.</p>' +
+  '<p style="margin:0 0 14px;font-size:15px;line-height:1.6;color:' + C.grijs + '">Bedankt voor uw aanvraag. In de bijlage vindt u uw persoonlijke adviesrapport.</p>' +
+  '<p style="margin:0 0 22px;font-size:15px;line-height:1.6;color:' + C.grijs + '">Een adviseur van R&amp;E Installaties neemt zo snel mogelijk contact met u op om het rapport met u te bespreken.</p>' +
   '<table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="background:' + C.oranje + ';border-radius:100px"><a href="tel:' + INSTELLINGEN.telefoon.replace(/ /g, '') + '" style="' + F + 'display:inline-block;padding:12px 24px;color:#fff;font-weight:600;font-size:15px;text-decoration:none">Bel ' + INSTELLINGEN.telefoon + '</a></td></tr></table>' +
   '<p style="margin:16px 0 0;font-size:14px;color:' + C.grijs + '">Vragen? Beantwoord deze mail of mail naar <a href="mailto:' + INSTELLINGEN.email + '" style="color:' + C.blauwDonker + '">' + INSTELLINGEN.email + '</a>.</p>' +
   '<p style="margin:22px 0 0;font-size:15px;color:' + C.grijs + '">Met vriendelijke groet,<br>Team R&amp;E Installaties</p>' +
   '</td></tr>' +
-  '<tr><td style="padding:16px 28px;background:#f7f6f1;font-size:12px;line-height:1.5;color:#7a786f">' + (metBerekening ? 'Dit advies is een indicatie op basis van uw eigen antwoorden. De definitieve keuze en prijs volgen na beoordeling door onze adviseur.' : 'Dit is een overzicht van uw eigen antwoorden. Het advies en de prijs volgen na beoordeling door onze adviseur.') + '<br>R&amp;E Installaties · Willem Schoutenstraat 17, 7825 VV Emmen · ' + INSTELLINGEN.telefoon + '</td></tr>' +
+  '<tr><td style="padding:16px 28px;background:#f7f6f1;font-size:12px;line-height:1.5;color:#7a786f">R&amp;E Installaties · Willem Schoutenstraat 17, 7825 VV Emmen · ' + INSTELLINGEN.telefoon + '</td></tr>' +
+  '</table></td></tr></table></body></html>';
+
+// Reservemail als de PDF niet gemaakt kon worden: overzicht van de antwoorden
+const klantHtmlZonderPdf =
+  '<!DOCTYPE html><html lang="nl"><body style="margin:0;padding:0;background:#f0eee6">' +
+  '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f0eee6"><tr><td align="center" style="padding:24px 12px">' +
+  '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:620px;background:#ffffff;border-radius:10px;overflow:hidden;' + F + 'color:' + C.inkt + '">' +
+  '<tr><td style="background:' + C.navy + ';padding:22px 28px"><span style="' + F + 'color:#fff;font-size:20px;font-weight:600;letter-spacing:.3px">R&amp;E Installaties</span><br><span style="' + F + 'color:#9fc8df;font-size:13px">Uw adviesaanvraag · ' + leadId + '</span></td></tr>' +
+  '<tr><td style="padding:28px">' +
+  '<h2 style="' + F + 'margin:0 0 10px;font-size:22px;color:' + C.navy + ';font-weight:600">Beste ' + esc(a.voornaam) + ',</h2>' +
+  '<p style="margin:0 0 20px;font-size:15px;line-height:1.6;color:' + C.grijs + '">Bedankt voor uw aanvraag. We hebben uw gegevens goed ontvangen. Hieronder ziet u een overzicht van uw antwoorden. Ons advies bespreken we graag persoonlijk met u.</p>' +
+  kop('Uw woning in het kort') + '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="' + F + '">' + woning.map((w) => tr(w[0], w[1])).join('') + '</table>' +
+  kop('Hoe gaat het verder?') +
+  '<p style="margin:0 0 18px;font-size:15px;line-height:1.6;color:' + C.grijs + '">Een adviseur van R&amp;E Installaties neemt zo snel mogelijk contact met u op. We bespreken uw situatie en plannen zo nodig een bezoek aan huis. Daarna ontvangt u een offerte op maat.</p>' +
+  '<table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="background:' + C.oranje + ';border-radius:100px"><a href="tel:' + INSTELLINGEN.telefoon.replace(/ /g, '') + '" style="' + F + 'display:inline-block;padding:12px 24px;color:#fff;font-weight:600;font-size:15px;text-decoration:none">Bel ' + INSTELLINGEN.telefoon + '</a></td></tr></table>' +
+  '<p style="margin:16px 0 0;font-size:14px;color:' + C.grijs + '">Vragen? Beantwoord deze mail of mail naar <a href="mailto:' + INSTELLINGEN.email + '" style="color:' + C.blauwDonker + '">' + INSTELLINGEN.email + '</a>.</p>' +
+  '<p style="margin:22px 0 0;font-size:15px;color:' + C.grijs + '">Met vriendelijke groet,<br>Team R&amp;E Installaties</p>' +
+  '</td></tr>' +
+  '<tr><td style="padding:16px 28px;background:#f7f6f1;font-size:12px;line-height:1.5;color:#7a786f">Dit is een overzicht van uw eigen antwoorden. Het advies en de prijs volgen na beoordeling door onze adviseur.<br>R&amp;E Installaties · Willem Schoutenstraat 17, 7825 VV Emmen · ' + INSTELLINGEN.telefoon + '</td></tr>' +
   '</table></td></tr></table></body></html>';
 
 // ---------------------------------------------------------------- PDF (via PDFBolt)
@@ -350,11 +364,11 @@ const pdfHtml =
   '<td style="padding:22px 26px"><div style="color:#fff;font-size:22px;font-weight:600">R&amp;E Installaties</div>' +
   '<div style="color:#9fc8df;font-size:13px;margin-top:2px">' + (metBerekening ? 'Persoonlijk verduurzamingsadvies' : 'Overzicht adviesaanvraag verduurzaming') + '</div></td>' +
   '<td style="padding:22px 26px;text-align:right;color:#fff;font-size:12px;line-height:1.6">' + datumNl + '<br>Referentie ' + leadId + '</td></tr></table>' +
-  '<div class="blok" style="margin:22px 0 4px;padding:16px 20px;background:' + C.zacht + ';border-radius:8px;border-left:4px solid ' + C.blauw + '">' +
+  '<div class="blok" style="margin:20px 0 0;padding:0 2px">' +
   '<div style="font-size:16px;font-weight:600;color:' + C.navy + '">' + esc(naam) + '</div>' +
   '<div style="color:' + C.grijs + ';line-height:1.6;margin-top:2px">' + esc(adres) + '<br>' + esc(a.email) + ' · ' + esc(a.telefoon) + '</div></div>' +
-  (metBerekening ? '<div class="blok" style="margin-top:18px">' + adviesBlok + '</div>' + vergelijking + (tipsHtml ? kop('Goed om te weten') + tipsHtml : '') : '') +
-  kop('Uw woning in het kort') + '<table width="100%" cellpadding="0" cellspacing="0">' + woning.map((w) => tr(w[0], w[1])).join('') + '</table>' +
+  (metBerekening ? '<div class="blok" style="margin-top:20px;padding:18px 20px;background:' + C.zacht + ';border-radius:8px;border-left:4px solid ' + C.blauw + '">' + adviesBlok + '</div>' + vergelijking + (tipsHtml ? kop('Goed om te weten') + tipsHtml : '') : '') +
+  '<div class="blok">' + kop('Uw woning in het kort') + '<table width="100%" cellpadding="0" cellspacing="0">' + woning.map((w) => tr(w[0], w[1])).join('') + '</table></div>' +
   (s(a.opmerkingen) ? kop('Uw opmerkingen') + '<p style="margin:0;line-height:1.6;color:' + C.grijs + '">' + esc(a.opmerkingen) + '</p>' : '') +
   '<div class="blok">' + kop('Hoe gaat het verder?') +
   '<p style="margin:0;line-height:1.6;color:' + C.grijs + '">Een adviseur van R&amp;E Installaties neemt zo snel mogelijk contact met u op. We bespreken ' + (metBerekening ? 'het advies' : 'uw situatie') + ' en plannen zo nodig een bezoek aan huis. Daarna ontvangt u ' + (metBerekening ? 'een offerte' : 'een advies en offerte') + ' op maat.</p></div>' +
@@ -362,8 +376,7 @@ const pdfHtml =
   (metBerekening ? 'Dit advies is een indicatie op basis van uw eigen antwoorden. De definitieve keuze en prijs volgen na beoordeling door onze adviseur.' : 'Dit is een overzicht van uw eigen antwoorden. Het advies en de prijs volgen na beoordeling door onze adviseur.') +
   '<br>R&amp;E Installaties · Willem Schoutenstraat 17, 7825 VV Emmen · ' + INSTELLINGEN.telefoon + ' · ' + INSTELLINGEN.email + '</div>' +
   '</body></html>';
-const pdfBestand = 'RE-Installaties-adviesaanvraag-' + leadId + '.pdf';
-const pdfZin = '<p style="margin:-8px 0 20px;font-size:14px;line-height:1.6;color:' + C.grijs + '">In de bijlage vindt u dit overzicht ook als PDF.</p>';
+const pdfBestand = 'RE-Installaties-adviesrapport-' + leadId + '.pdf';
 
 // ---------------------------------------------------------------- interne leadmail
 const LABELS = {
@@ -405,7 +418,8 @@ return [{
     mapNaam: nu.toFormat('yyyy-MM-dd') + ' – ' + naam + ' – ' + postcode + ' (' + leadId + ')',
     row, indicatie: r,
     pdf: { html: Buffer.from(pdfHtml, 'utf8').toString('base64'), bestand: pdfBestand },
-    klant: { pdfZin, to: s(a.email), subject: (metBerekening ? 'Uw persoonlijke verduurzamingsadvies' : 'Uw adviesaanvraag is ontvangen') + ' – R&E Installaties', html: klantHtml },
+    klant: { to: s(a.email), subject: 'Uw persoonlijke adviesrapport – R&E Installaties', html: klantHtml,
+      subjectZonderPdf: 'Uw adviesaanvraag is ontvangen – R&E Installaties', htmlZonderPdf: klantHtmlZonderPdf },
     intern: {
       to: isTest ? INSTELLINGEN.testOntvanger : INSTELLINGEN.interneOntvanger, replyTo: s(a.email),
       subject: (isTest ? '[TEST] ' : '') + 'Nieuwe adviesaanvraag – ' + naam + ', ' + s(a.plaats) + ' (' + (r.adviesLabel || 'maatwerk') + (r.kw ? ', ± ' + r.kw + ' kW' : '') + ')',
